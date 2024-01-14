@@ -11,7 +11,9 @@ import java.util.ArrayList;
 public interface Entity {
 	Vec2 getPos();
 	void setPos(Vec2 pos);
+	void setSize(Vec2 size);
 	Vec2 getVelocity();
+	void setVelocity(Vec2 velocity);
 	ArrayList<Hitbox> getHitboxes();
 	ArrayList<String> getCollidesWith();
 	void setTexture(BufferedImage texture);

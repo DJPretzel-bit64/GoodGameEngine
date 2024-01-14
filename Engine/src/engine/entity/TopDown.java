@@ -6,11 +6,11 @@ import engine.utility.Vec2;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Player extends BasicEntity {
+public class TopDown extends BasicEntity {
 
 	private final double speed;
 
-	public Player(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, double speed) {
+	public TopDown(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, double speed) {
 		super(pos, size, texture, collidesWith);
 		this.speed = speed;
 	}

@@ -12,8 +12,8 @@ import java.util.Scanner;
 
 public class World extends BasicEntity {
 
-	private		final	File			worldCSV;
-	private		final	int				tileSize;
+	protected	final	File			worldCSV;
+	protected	final	int				tileSize;
 	protected 			BufferedImage[]	tiles;
 
 	public World(BufferedImage tilemap, File worldCSV, int tileSize) {

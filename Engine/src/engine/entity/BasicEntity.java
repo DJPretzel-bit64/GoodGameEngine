@@ -42,8 +42,19 @@ public class BasicEntity implements Entity {
 	}
 
 	@Override
+	public void	setSize(Vec2 size) {
+		this.size = new Vec2(size);
+		this.hitboxes.getFirst().setSize(new Vec2(size));
+	}
+
+	@Override
 	public Vec2 getVelocity() {
 		return new Vec2(this.velocity);
+	}
+
+	@Override
+	public void setVelocity(Vec2 velocity) {
+		this.velocity = velocity;
 	}
 
 	@Override

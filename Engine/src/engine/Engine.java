@@ -1,9 +1,6 @@
 package engine;
 
-import engine.entity.BasicEntity;
-import engine.entity.Entity;
-import engine.entity.Player;
-import engine.entity.World;
+import engine.entity.*;
 import engine.physics.DefaultPhysicsEngine;
 import engine.physics.PhysicsEngine;
 import engine.utility.Input;
@@ -138,7 +135,7 @@ public class Engine extends Canvas implements Runnable {
 
 					switch (type) {
 						case "BasicEntity" -> {
-							if (code == null)
+							if(code == null)
 								entity = new BasicEntity(pos, size, texture, collidesWith);
 							else {
 								code = code.replace('/', '.');
@@ -148,23 +145,37 @@ public class Engine extends Canvas implements Runnable {
 										.newInstance(pos, size, texture, collidesWith);
 							}
 						}
-						case "Player" -> {
-							double speed = Double.parseDouble(properties.getProperty("speed", "50"));
-							if (code == null)
-								entity = new Player(pos, size, texture, collidesWith, speed);
+						case "TopDown" -> {
+							double speed = Double.parseDouble(properties.getProperty("speed", "100"));
+							if(code == null)
+								entity = new TopDown(pos, size, texture, collidesWith, speed);
 							else {
 								code = code.replace('/', '.');
 								Class<?> entityClass = loadClass(code);
-								entity = (Player) entityClass
+								entity = (TopDown) entityClass
 										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, double.class)
 										.newInstance(pos, size, texture, collidesWith, speed);
+							}
+						}
+						case "Platformer" -> {
+							double speed = Double.parseDouble(properties.getProperty("speed", "100"));
+							double jumpSpeed = Double.parseDouble(properties.getProperty("jump_speed", "150"));
+							double gravity = Double.parseDouble(properties.getProperty("gravity", "400"));
+							if(code == null)
+								entity = new Platformer(pos, size, texture, collidesWith, speed, jumpSpeed, gravity);
+							else {
+								code = code.replace('/', '.');
+								Class<?> entityClass = loadClass(code);
+								entity = (Platformer) entityClass
+										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, double.class, double.class, double.class)
+										.newInstance(pos, size, texture, collidesWith, speed, jumpSpeed, gravity);
 							}
 						}
 						case "World" -> {
 							String worldCSVFile = properties.getProperty("world_csv_file");
 							int tileSize = Integer.parseInt(properties.getProperty("tile_size", "16"));
 							File worldCSV = new File(worldCSVFile);
-							if (code == null)
+							if(code == null)
 								entity = new World(texture, worldCSV, tileSize);
 							else {
 								code = code.replace('/', '.');

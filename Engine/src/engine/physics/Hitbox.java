@@ -21,6 +21,10 @@ public class Hitbox {
 		return new Vec2(this.pos);
 	}
 
+	public void setSize(Vec2 size) {
+		this.size = new Vec2(size);
+	}
+
 	public Vec2 getSize() {
 		return new Vec2(this.size);
 	}

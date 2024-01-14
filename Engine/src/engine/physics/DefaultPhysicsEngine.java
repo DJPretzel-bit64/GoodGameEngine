@@ -24,6 +24,7 @@ public class DefaultPhysicsEngine implements PhysicsEngine {
 									throw new Exception("Break");
 			} catch(Exception ignored) {
 				entity.setPos(new Vec2(lastPos.x, entity.getPos().y));
+				entity.setVelocity(new Vec2(0, entity.getVelocity().y));
 			}
 
 			try {
@@ -37,6 +38,7 @@ public class DefaultPhysicsEngine implements PhysicsEngine {
 
 			} catch(Exception ignored) {
 				entity.setPos(new Vec2(entity.getPos().x, lastPos.y));
+				entity.setVelocity(new Vec2(entity.getVelocity().x, 0));
 			}
 		}
 	}

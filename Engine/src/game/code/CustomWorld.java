@@ -23,8 +23,9 @@ public class CustomWorld extends World {
 		if(data != PLAYER_DATA_NUM)
 			super.doStuffWithData(data, x, y, g);
 		else {
-			Entity player = Objects.requireNonNull(Engine.getEntity("engine.entity.Player"));
+			Entity player = Objects.requireNonNull(Engine.getEntity("engine.entity.Platformer"));
 			player.setPos(new Vec2(x, y));
+			player.setSize(new Vec2(tileSize));
 			player.setTexture(tiles[data]);
 		}
 	}
