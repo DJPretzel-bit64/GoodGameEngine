@@ -29,9 +29,11 @@ public class Hitbox {
 		return new Vec2(this.size);
 	}
 
-	public boolean intersects(Hitbox collision) {
-		Rectangle r1 = new Rectangle(this.pos.xi(), this.pos.yi(), this.size.xi(), this.size.yi());
-		Rectangle r2 = new Rectangle(collision.pos.xi(), collision.pos.yi(), collision.size.xi(), collision.size.yi());
+	public boolean intersects(Hitbox that) {
+		Vec2 thisOffset = this.pos.minus(this.size.divide(2));
+		Rectangle r1 = new Rectangle(thisOffset.xi(), thisOffset.yi(), this.size.xi(), this.size.yi());
+		Vec2 thatOffset = that.pos.minus(that.size.divide(2));
+		Rectangle r2 = new Rectangle(thatOffset.xi(), thatOffset.yi(), that.size.xi(), that.size.yi());
 		return r1.intersects(r2);
 	}
 }
