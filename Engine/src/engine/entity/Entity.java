@@ -17,6 +17,8 @@ public interface Entity {
 	ArrayList<Hitbox> getHitboxes();
 	ArrayList<String> getCollidesWith();
 	void setTexture(BufferedImage texture);
+	int getLayer();
+	void init();
 	void render(Graphics g);
 	void update(double delta, Input input);
 }

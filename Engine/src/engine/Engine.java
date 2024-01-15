@@ -37,6 +37,7 @@ public class Engine extends Canvas implements Runnable {
 	private					Color				bgColor;
 	private					int					tps;
 	public	static			int					scale;
+	private					int					numLayers;
 	private					String				entitiesLocation;
 	private					String				cameraEntityName;
 	private					String				physicsEngineName;
@@ -92,6 +93,7 @@ public class Engine extends Canvas implements Runnable {
 			String bgColorS = properties.getProperty("bg_color", "34, 37, 41");
 			tps = Integer.parseInt(properties.getProperty("tps", "60"));
 			scale = Integer.parseInt(properties.getProperty("scale", "4"));
+			numLayers = Integer.parseInt(properties.getProperty("num_layers", "10"));
 			entitiesLocation = properties.getProperty("entities", "game/entities");
 			physicsEngineName = properties.getProperty("physics_engine", "default");
 			debug = Boolean.parseBoolean(properties.getProperty("debug", "false"));
@@ -112,7 +114,7 @@ public class Engine extends Canvas implements Runnable {
 					properties.load(new FileInputStream(file.toString()));
 
 					Entity entity;
-					String type = properties.getProperty("type");
+					String type = properties.getProperty("type", "null");
 					double posX = Double.parseDouble(properties.getProperty("pos_x", "0"));
 					double posY = Double.parseDouble(properties.getProperty("pos_y", "0"));
 					double sizeX = Double.parseDouble(properties.getProperty("size_x", "16"));
@@ -121,6 +123,7 @@ public class Engine extends Canvas implements Runnable {
 							"engine/res/missing.png");
 					String code = properties.getProperty("code");
 					String collidesWithString = properties.getProperty("collides_with", "");
+					int layer = Integer.parseInt(properties.getProperty("layer", "-1"));
 					String[] collidesWithArray = collidesWithString.split(",");
 					ArrayList<String> collidesWith = new ArrayList<>(Arrays.asList(collidesWithArray));
 					Vec2 pos = new Vec2(posX, posY);
@@ -133,28 +136,28 @@ public class Engine extends Canvas implements Runnable {
 						texture = ImageIO.read(new File("engine/res/missing.png"));
 					}
 
-					switch (type) {
+					switch(type) {
 						case "BasicEntity" -> {
 							if(code == null)
-								entity = new BasicEntity(pos, size, texture, collidesWith);
+								entity = new BasicEntity(pos, size, texture, collidesWith, layer);
 							else {
 								code = code.replace('/', '.');
 								Class<?> entityClass = loadClass(code);
 								entity = (BasicEntity) entityClass
-										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class)
-										.newInstance(pos, size, texture, collidesWith);
+										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class)
+										.newInstance(pos, size, texture, collidesWith, layer);
 							}
 						}
 						case "TopDown" -> {
 							double speed = Double.parseDouble(properties.getProperty("speed", "100"));
 							if(code == null)
-								entity = new TopDown(pos, size, texture, collidesWith, speed);
+								entity = new TopDown(pos, size, texture, collidesWith, layer, speed);
 							else {
 								code = code.replace('/', '.');
 								Class<?> entityClass = loadClass(code);
 								entity = (TopDown) entityClass
-										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, double.class)
-										.newInstance(pos, size, texture, collidesWith, speed);
+										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class, double.class)
+										.newInstance(pos, size, texture, collidesWith, layer, speed);
 							}
 						}
 						case "Platformer" -> {
@@ -162,13 +165,13 @@ public class Engine extends Canvas implements Runnable {
 							double jumpSpeed = Double.parseDouble(properties.getProperty("jump_speed", "150"));
 							double gravity = Double.parseDouble(properties.getProperty("gravity", "400"));
 							if(code == null)
-								entity = new Platformer(pos, size, texture, collidesWith, speed, jumpSpeed, gravity);
+								entity = new Platformer(pos, size, texture, collidesWith, layer, speed, jumpSpeed, gravity);
 							else {
 								code = code.replace('/', '.');
 								Class<?> entityClass = loadClass(code);
 								entity = (Platformer) entityClass
-										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, double.class, double.class, double.class)
-										.newInstance(pos, size, texture, collidesWith, speed, jumpSpeed, gravity);
+										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class, double.class, double.class, double.class)
+										.newInstance(pos, size, texture, collidesWith, layer, speed, jumpSpeed, gravity);
 							}
 						}
 						case "World" -> {
@@ -176,13 +179,13 @@ public class Engine extends Canvas implements Runnable {
 							int tileSize = Integer.parseInt(properties.getProperty("tile_size", "16"));
 							File worldCSV = new File(worldCSVFile);
 							if(code == null)
-								entity = new World(texture, worldCSV, tileSize);
+								entity = new World(texture, worldCSV, tileSize, layer);
 							else {
 								code = code.replace('/', '.');
 								Class<?> entityClass = loadClass(code);
 								entity = (World) entityClass
-										.getDeclaredConstructor(BufferedImage.class, File.class, int.class)
-										.newInstance(texture, worldCSV, tileSize);
+										.getDeclaredConstructor(BufferedImage.class, File.class, int.class, int.class)
+										.newInstance(texture, worldCSV, tileSize, layer);
 							}
 						}
 						default -> {
@@ -199,6 +202,10 @@ public class Engine extends Canvas implements Runnable {
 					if(properties.getProperty("follow", "false").equals("true"))
 						cameraEntityName = entity.toString();
 				}
+			}
+
+			for(Entity entity : entities) {
+				entity.init();
 			}
 		} catch(Exception e) {
 			System.out.println("Could not load folder " + entitiesLocation + ". Cause: " + e);
@@ -280,7 +287,13 @@ public class Engine extends Canvas implements Runnable {
 		g.fillRect(0, 0, width, height);
 
 		for(Entity entity : entities)
-			entity.render(g);
+			if(entity.getLayer() == -1)
+				entity.render(g);
+
+		for(int i = 0; i < numLayers; i++)
+			for(Entity entity : entities)
+				if(entity.getLayer() == i)
+					entity.render(g);
 
 		g.dispose();
 		bs.show();

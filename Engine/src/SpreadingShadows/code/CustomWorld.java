@@ -12,9 +12,16 @@ import java.io.File;
 public class CustomWorld extends World {
 
 	final int PLAYER_NUM = 0;
+	Entity player;
+	Mar mar;
 
-	public CustomWorld(BufferedImage tilemap, File worldCSV, int tileSize) {
-		super(tilemap, worldCSV, tileSize);
+	public CustomWorld(BufferedImage tilemap, File worldCSV, int tileSize, int layer) {
+		super(tilemap, worldCSV, tileSize, layer);
+	}
+
+	@Override
+	public void init() {
+		mar = (Mar) Engine.getEntity("SpreadingShadows.code.Mar");
 	}
 
 	@Override
@@ -22,10 +29,10 @@ public class CustomWorld extends World {
 		if(data != PLAYER_NUM)
 			super.doStuffWithData(data, x, y, g);
 		else {
-			Entity player = Engine.getEntity("engine.entity.Platformer");
+			player = Engine.getEntity("engine.entity.Platformer");
 			assert player != null;
 			player.setPos(new Vec2(x, y));
-			player.setSize(new Vec2(tileSize));
+			player.setSize(new Vec2(tileSize * 2));
 			player.setTexture(tiles[data]);
 		}
 	}

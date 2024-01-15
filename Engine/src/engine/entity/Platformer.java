@@ -11,8 +11,8 @@ public class Platformer extends BasicEntity {
 	private final double speed, jumpSpeed, gravity;
 	private Vec2 lastVelocity = new Vec2();
 
-	public Platformer(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, double speed, double jumpSpeed, double gravity) {
-		super(pos, size, texture, collidesWith);
+	public Platformer(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, int layer, double speed, double jumpSpeed, double gravity) {
+		super(pos, size, texture, collidesWith, layer);
 		this.speed = speed;
 		this.jumpSpeed = jumpSpeed;
 		this.gravity = gravity;

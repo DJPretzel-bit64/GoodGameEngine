@@ -18,8 +18,9 @@ public class BasicEntity implements Entity {
 	protected int id;
 	protected ArrayList<Hitbox> hitboxes = new ArrayList<>();
 	protected ArrayList<String> collidesWith;
+	protected int layer;
 
-	public BasicEntity(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith) {
+	public BasicEntity(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, int layer) {
 		this.pos = pos;
 		this.size = size;
 		this.texture = texture;
@@ -27,6 +28,7 @@ public class BasicEntity implements Entity {
 		Random random = new Random(System.nanoTime());
 		this.id = random.nextInt();
 		hitboxes.add(new Hitbox(pos, size));
+		this.layer = layer;
 	}
 
 	@Override
@@ -71,6 +73,14 @@ public class BasicEntity implements Entity {
 	public void setTexture(BufferedImage texture) {
 		this.texture = texture;
 	}
+
+	@Override
+	public int getLayer() {
+		return layer;
+	}
+
+	@Override
+	public void init() {}
 
 	@Override
 	public void render(Graphics g) {

@@ -16,8 +16,8 @@ public class World extends BasicEntity {
 	protected	final	int				tileSize;
 	protected 			BufferedImage[]	tiles;
 
-	public World(BufferedImage tilemap, File worldCSV, int tileSize) {
-		super(new Vec2(), new Vec2(), tilemap, new ArrayList<>());
+	public World(BufferedImage tilemap, File worldCSV, int tileSize, int layer) {
+		super(new Vec2(), new Vec2(), tilemap, new ArrayList<>(), layer);
 
 		this.tileSize = tileSize;
 		this.texture = tilemap;
