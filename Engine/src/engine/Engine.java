@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 
-public class Engine extends Canvas implements Runnable {
+public class Engine extends Canvas {
 
 	private 		final	Input				input;
 	private			final	JFrame				frame = new JFrame();
@@ -44,6 +44,7 @@ public class Engine extends Canvas implements Runnable {
 	public	static			boolean				debug;
 
 	private					boolean				running;
+	private					double				sps;
 	private	static	final	ArrayList<Entity>	entities = new ArrayList<>();
 	public	static			Vec2				cameraPos = new Vec2();
 	private					PhysicsEngine		physicsEngine;
@@ -231,37 +232,48 @@ public class Engine extends Canvas implements Runnable {
 
 	public synchronized void start() {
 		running = true;
-		Thread engineThread = new Thread(this);
-		engineThread.start();
+		Thread renderThread = new Thread(render);
+		Thread updateThread = new Thread(update);
+		renderThread.start();
+		updateThread.start();
 	}
 
-	@Override
-	public void run() {
-		long lastTime = System.nanoTime();
-		long timer = System.currentTimeMillis();
-		int frames = 0;
-		double sps = 0;
+	Runnable render = new Runnable() {
+		@Override
+		public void run() {
+			long timer = System.currentTimeMillis();
+			int frames = 0;
 
-		while(running) {
-			long now = System.nanoTime();
-			double delta = (now - lastTime) / 1_000_000_000.;
-			if(delta >= 1./tps) {
-				update(delta);
-				lastTime = now;
-				sps += 1. / tps;
-			}
-			render();
-			frames ++;
-			render();
-			if (System.currentTimeMillis() - timer >= 1000) {
-				timer += 1000;
-				if(separateWindow)
-					frame.setTitle(title + " | " + frames + " fps" + " | " + Math.round(sps * tps) + " tps");
-				frames = 0;
-				sps = 0;
+			while(running) {
+				render();
+				frames ++;
+				if (System.currentTimeMillis() - timer >= 1000) {
+					timer += 1000;
+					if(separateWindow)
+						frame.setTitle(title + " | " + frames + " fps" + " | " + Math.round(sps * tps) + " tps");
+					frames = 0;
+					sps = 0;
+				}
 			}
 		}
-	}
+	};
+
+	Runnable update = new Runnable() {
+		@Override
+		public void run() {
+			long lastTime = System.nanoTime();
+
+			while(running) {
+				long now = System.nanoTime();
+				double delta = (now - lastTime) / 1_000_000_000.;
+				if(delta >= 1./tps) {
+					update(delta);
+					lastTime = now;
+					sps += 1./tps;
+				}
+			}
+		}
+	};
 
 	private void update(double delta) {
 		width = getWidth();
