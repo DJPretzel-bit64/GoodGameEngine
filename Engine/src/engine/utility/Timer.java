@@ -4,7 +4,7 @@ public class Timer {
 
 	private final long duration;
 	private final boolean loop;
-	private long start;
+	private long start = 0;
 
 	public Timer(long duration, boolean loop) {
 		this.duration = duration;
@@ -16,7 +16,7 @@ public class Timer {
 	}
 
 	public boolean expired() {
-		boolean expired = start + duration >= System.currentTimeMillis();
+		boolean expired = System.currentTimeMillis() - start >= duration;
 		if(loop)
 			start += duration;
 		return expired;

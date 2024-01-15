@@ -18,7 +18,6 @@ public class CustomWorld extends World {
 
 	public CustomWorld(BufferedImage tilemap, File worldCSV, int tileSize, int layer) {
 		super(tilemap, worldCSV, tileSize, layer);
-//		MAR_NUMS.add(4);
 	}
 
 	@Override
