@@ -33,10 +33,14 @@ public class Engine extends Canvas {
 	private			final	boolean				separateWindow;
 	public	static			int					width;
 	public	static			int					height;
+	private					int					initialWidth;
+	private					int					initialHeight;
 	private					String				title;
 	private					Color				bgColor;
 	private					int					tps;
 	public	static			int					scale;
+	private					int					initialScale;
+	private					boolean				dynamicScale;
 	private					int					numLayers;
 	private					String				entitiesLocation;
 	private					String				cameraEntityName;
@@ -88,12 +92,13 @@ public class Engine extends Canvas {
 			Properties properties = new Properties();
 			properties.load(new FileReader("engine/config.properties"));
 
-			width = Integer.parseInt(properties.getProperty("width", "800"));
-			height = Integer.parseInt(properties.getProperty("height", "600"));
+			width = initialWidth = Integer.parseInt(properties.getProperty("width", "800"));
+			height = initialHeight = Integer.parseInt(properties.getProperty("height", "600"));
 			title = properties.getProperty("title", "Engine");
 			String bgColorS = properties.getProperty("bg_color", "34, 37, 41");
 			tps = Integer.parseInt(properties.getProperty("tps", "60"));
-			scale = Integer.parseInt(properties.getProperty("scale", "4"));
+			scale = initialScale = Integer.parseInt(properties.getProperty("scale", "4"));
+			dynamicScale = Boolean.parseBoolean(properties.getProperty("dynamic_scale", "true"));
 			numLayers = Integer.parseInt(properties.getProperty("num_layers", "10"));
 			entitiesLocation = properties.getProperty("entities", "game/entities");
 			physicsEngineName = properties.getProperty("physics_engine", "default");
@@ -278,6 +283,12 @@ public class Engine extends Canvas {
 	private void update(double delta) {
 		width = getWidth();
 		height = getHeight();
+
+		if(dynamicScale) {
+			double ratio = Math.min((double)width / initialWidth, (double)height / initialHeight);
+			scale = Math.max((int)(ratio * initialScale), 1);
+		}
+
 		physicsEngine.checkCollisions(entities);
 		for(Entity entity : entities) {
 			entity.update(delta, input);
