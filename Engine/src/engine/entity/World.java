@@ -22,6 +22,10 @@ public class World extends BasicEntity {
 		this.tileSize = tileSize;
 		this.texture = tilemap;
 		this.worldCSV = worldCSV;
+	}
+
+	@Override
+	public void init() {
 		try {
 			createWorld();
 		} catch(IOException e) {
