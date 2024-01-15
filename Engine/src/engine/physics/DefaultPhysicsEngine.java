@@ -24,12 +24,19 @@ public class DefaultPhysicsEngine implements PhysicsEngine {
 
 		try {
 			entity.setPos(entity.getPos().plus(new Vec2(entity.getVelocity().x, 0)));
-			for (Entity collisionEntity : getEntities())
-				if (entity.getCollidesWith().contains(collisionEntity.getClass().getName()))
-					for (Hitbox hitbox : entity.getHitboxes())
-						for (Hitbox collisionHitbox : collisionEntity.getHitboxes())
-							if (hitbox.intersects(collisionHitbox))
+			for (Entity collisionEntity : getEntities()) {
+				for (Hitbox hitbox : entity.getHitboxes()) {
+					for (Hitbox collisionHitbox : collisionEntity.getHitboxes()) {
+						if (hitbox.intersects(collisionHitbox)) {
+							if(!entity.getLastCollisions().contains(collisionEntity.getClass().getName()))
+								entity.addToLastCollisions(collisionEntity.getClass().getName());
+							if (entity.getCollidesWith().contains(collisionEntity.getClass().getName())) {
 								throw new Exception("Break");
+							}
+						}
+					}
+				}
+			}
 		} catch(Exception ignored) {
 			entity.setPos(new Vec2(lastPosX, entity.getPos().y));
 			if(iteration >= MAX_DEPTH)
@@ -45,12 +52,19 @@ public class DefaultPhysicsEngine implements PhysicsEngine {
 		double lastPosY = entity.getPos().y;
 		try {
 			entity.setPos(entity.getPos().plus(new Vec2(0, entity.getVelocity().y)));
-			for (Entity collisionEntity : getEntities())
-				if (entity.getCollidesWith().contains(collisionEntity.getClass().getName()))
-					for (Hitbox hitbox : entity.getHitboxes())
-						for (Hitbox collisionHitbox : collisionEntity.getHitboxes())
-							if (hitbox.intersects(collisionHitbox))
+			for (Entity collisionEntity : getEntities()) {
+				for (Hitbox hitbox : entity.getHitboxes()) {
+					for (Hitbox collisionHitbox : collisionEntity.getHitboxes()) {
+						if (hitbox.intersects(collisionHitbox)) {
+							if(!entity.getLastCollisions().contains(collisionEntity.getClass().getName()))
+								entity.addToLastCollisions(collisionEntity.getClass().getName());
+							if (entity.getCollidesWith().contains(collisionEntity.getClass().getName())) {
 								throw new Exception("Break");
+							}
+						}
+					}
+				}
+			}
 		} catch(Exception ignored) {
 			entity.setPos(new Vec2(entity.getPos().x, lastPosY));
 			if(iteration >= MAX_DEPTH)

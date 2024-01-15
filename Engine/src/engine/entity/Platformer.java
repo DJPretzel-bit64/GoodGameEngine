@@ -20,6 +20,8 @@ public class Platformer extends BasicEntity {
 
 	@Override
 	public void update(double delta, Input input) {
+		lastCollisions.clear();
+
 		double speed = this.speed * delta;
 		double jumpSpeed = -this.jumpSpeed * delta;
 		double gravity = this.gravity * delta * delta;

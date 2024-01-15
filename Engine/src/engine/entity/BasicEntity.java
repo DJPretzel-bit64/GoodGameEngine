@@ -18,6 +18,7 @@ public class BasicEntity implements Entity {
 	protected int id;
 	protected ArrayList<Hitbox> hitboxes = new ArrayList<>();
 	protected ArrayList<String> collidesWith;
+	protected ArrayList<String> lastCollisions = new ArrayList<>();
 	protected int layer;
 
 	public BasicEntity(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, int layer) {
@@ -77,6 +78,16 @@ public class BasicEntity implements Entity {
 	@Override
 	public int getLayer() {
 		return layer;
+	}
+
+	@Override
+	public ArrayList<String> getLastCollisions() {
+		return new ArrayList<>(lastCollisions);
+	}
+
+	@Override
+	public void addToLastCollisions(String collision) {
+		lastCollisions.add(collision);
 	}
 
 	@Override

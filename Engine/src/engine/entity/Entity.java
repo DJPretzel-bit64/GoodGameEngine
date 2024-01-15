@@ -18,6 +18,8 @@ public interface Entity {
 	ArrayList<String> getCollidesWith();
 	void setTexture(BufferedImage texture);
 	int getLayer();
+	ArrayList<String> getLastCollisions();
+	void addToLastCollisions(String collision);
 	void init();
 	void render(Graphics g);
 	void update(double delta, Input input);
