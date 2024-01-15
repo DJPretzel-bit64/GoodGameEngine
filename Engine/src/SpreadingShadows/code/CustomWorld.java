@@ -32,7 +32,7 @@ public class CustomWorld extends World {
 			player = Engine.getEntity("engine.entity.Platformer");
 			assert player != null;
 			player.setPos(new Vec2(x, y));
-			player.setSize(new Vec2(tileSize * 2));
+			player.setSize(new Vec2(tileSize));
 			player.setTexture(tiles[data]);
 		}
 	}
