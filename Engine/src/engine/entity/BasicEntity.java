@@ -95,15 +95,19 @@ public class BasicEntity implements Entity {
 
 	@Override
 	public void render(Graphics g) {
-		Vec2 offset = pos.minus(cameraPos).minus(size.divide(2));
-		g.drawImage(texture, offset.xi() * scale + width / 2, offset.yi() * scale + height / 2, size.xi() * scale, size.yi() * scale, null);
+		renderImage(g, texture, pos, size);
 		if(debug) {
 			g.setColor(Color.ORANGE);
 			for (Hitbox hitbox : hitboxes) {
-				offset = hitbox.getPos().minus(cameraPos).minus(hitbox.getSize().divide(2));
+				Vec2 offset = hitbox.getPos().minus(cameraPos).minus(hitbox.getSize().divide(2));
 				g.drawRect(offset.xi() * scale + width / 2, offset.yi() * scale + height / 2, hitbox.getSize().xi() * scale, hitbox.getSize().yi() * scale);
 			}
 		}
+	}
+
+	protected void renderImage(Graphics g, BufferedImage texture, Vec2 pos, Vec2 size) {
+		Vec2 offset = pos.minus(cameraPos).minus(size.divide(2));
+		g.drawImage(texture, offset.xi() * scale + width / 2, offset.yi() * scale + height / 2, size.xi() * scale, size.yi() * scale, null);
 	}
 
 	@Override

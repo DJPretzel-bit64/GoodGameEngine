@@ -216,6 +216,7 @@ public class Engine extends Canvas {
 			}
 		} catch(Exception e) {
 			System.out.println("Could not load folder " + entitiesLocation + ". Cause: " + e);
+			e.printStackTrace();
 		}
 	}
 
