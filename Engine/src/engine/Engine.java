@@ -254,7 +254,6 @@ public class Engine extends Canvas {
 				if(updateFinished) {
 					render();
 					frames++;
-					updateFinished = false;
 				}
 				if (System.currentTimeMillis() - timer >= 1000) {
 					timer += 1000;
@@ -276,6 +275,7 @@ public class Engine extends Canvas {
 				long now = System.nanoTime();
 				double delta = (now - lastTime) / 1_000_000_000.;
 				if(delta >= 1./tps) {
+					updateFinished = false;
 					update(delta);
 					lastTime = now;
 					sps += 1./tps;
