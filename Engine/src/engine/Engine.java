@@ -48,6 +48,7 @@ public class Engine extends Canvas {
 	public	static			boolean				debug;
 
 	private					boolean				running;
+	private					boolean				updateFinished;
 	private					double				sps;
 	private	static	final	ArrayList<Entity>	entities = new ArrayList<>();
 	public	static			Vec2				cameraPos = new Vec2();
@@ -250,8 +251,11 @@ public class Engine extends Canvas {
 			int frames = 0;
 
 			while(running) {
-				render();
-				frames ++;
+				if(updateFinished) {
+					render();
+					frames++;
+					updateFinished = false;
+				}
 				if (System.currentTimeMillis() - timer >= 1000) {
 					timer += 1000;
 					if(separateWindow)
@@ -275,6 +279,7 @@ public class Engine extends Canvas {
 					update(delta);
 					lastTime = now;
 					sps += 1./tps;
+					updateFinished = true;
 				}
 			}
 		}
@@ -291,10 +296,10 @@ public class Engine extends Canvas {
 
 		physicsEngine.checkCollisions(entities);
 		for(Entity entity : entities) {
-			entity.update(delta, input);
 			if(entity.toString().equals(cameraEntityName)) {
 				cameraPos = new Vec2(entity.getPos());
 			}
+			entity.update(delta, input);
 		}
 	}
 
