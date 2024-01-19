@@ -49,6 +49,7 @@ public class Engine extends Canvas {
 
 	private					boolean				running;
 	private					boolean				updateFinished;
+	private					boolean				linux;
 	private					double				sps;
 	private	static	final	ArrayList<Entity>	entities = new ArrayList<>();
 	public	static			Vec2				cameraPos = new Vec2();
@@ -59,6 +60,9 @@ public class Engine extends Canvas {
 
 		// I don't know what this does, but it stops the flickering
 		Toolkit.getDefaultToolkit().setDynamicLayout(false);
+		String os = System.getProperty("os.name").toLowerCase();
+		if(os.contains("nix") || os.contains("nux"))
+			linux = true;
 
 		this.separateWindow = separateWindow;
 		loadProperties();
@@ -255,6 +259,7 @@ public class Engine extends Canvas {
 				if(updateFinished) {
 					render();
 					frames++;
+					updateFinished = false;
 				}
 				if (System.currentTimeMillis() - timer >= 1000) {
 					timer += 1000;
@@ -305,6 +310,9 @@ public class Engine extends Canvas {
 	}
 
 	private void render() {
+		if(linux)
+			Toolkit.getDefaultToolkit().sync();
+
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null) {
 			this.createBufferStrategy(2);
