@@ -24,9 +24,12 @@ public class CustomPlatformer extends Platformer {
 
 	@Override
 	public void update(double delta, Input input) {
-		if(lastCollisions.contains(Mar.class.getName()) && corruptionTimer.expired()) {
+		if(corruptionTimer.expired()) {
 			corruptionTimer.start();
-			corruptionLevel++;
+			if (lastCollisions.contains(Mar.class.getName())) {
+				corruptionLevel = Math.min(corruptionLevel + 1, 5);
+			} else
+				corruptionLevel = Math.max(corruptionLevel - 1, 0);
 		}
 		super.update(delta, input);
 	}
