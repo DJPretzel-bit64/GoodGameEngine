@@ -3,6 +3,8 @@ package SpreadingShadows.code;
 import engine.Engine;
 import engine.entity.Entity;
 import engine.entity.World;
+import engine.utility.Input;
+import engine.utility.Timer;
 import engine.utility.Vec2;
 
 import java.awt.*;
@@ -15,6 +17,7 @@ public class CustomWorld extends World {
 	final int[] MAR_NUMS = {5, 6, 7, 8, 9, 16, 17, 18, 26, 27, 28, 36, 37, 38, 47, 57};
 	Entity player;
 	Mar mar;
+	Timer corruptionTimer = new Timer(500, true);
 
 	public CustomWorld(BufferedImage tilemap, File worldCSV, int tileSize, int layer) {
 		super(tilemap, worldCSV, tileSize, layer);
@@ -23,6 +26,7 @@ public class CustomWorld extends World {
 	@Override
 	public void init() {
 		mar = (Mar) Engine.getEntity("SpreadingShadows.code.Mar");
+		corruptionTimer.start();
 		super.init();
 	}
 
@@ -41,6 +45,20 @@ public class CustomWorld extends World {
 		}
 		else
 			super.doStuffWithData(data, x, y, g);
+	}
+
+	@Override
+	public void update(double delta, Input input) {
+		if(corruptionTimer.expired())
+			spread();
+	}
+
+	private void spread() {
+		for(int[] line : worldData) {
+			for(int data : line) {
+				System.out.println(data);
+			}
+		}
 	}
 
 	public boolean contains(int[] nums, int data) {
