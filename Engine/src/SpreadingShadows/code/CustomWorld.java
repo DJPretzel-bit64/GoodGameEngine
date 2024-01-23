@@ -72,7 +72,7 @@ public class CustomWorld extends World {
 			int[] line = newWorldData.get(i);
 			for(int j = 0; j < line.length; j++) {
 				int data = line[j];
-				if(!contains(MAR_NUMS, data) && data != -1) {
+				if(!contains(MAR_NUMS, data) && data != -1 && data != PLAYER_NUM) {
 					if(checkSurroundings(i, j))
 						line[j] = data + 5;
 				}
