@@ -15,4 +15,8 @@ public class Mar extends BasicEntity {
 	public void addMar(int x, int y) {
 		hitboxes.add(new Hitbox(new Vec2(x, y - 8), new Vec2(16, 1)));
 	}
+
+	public void clearMar() {
+		hitboxes.clear();
+	}
 }

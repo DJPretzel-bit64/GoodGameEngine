@@ -35,7 +35,8 @@ public class World extends BasicEntity {
 		}
 	}
 
-	private void createWorld() throws IOException {
+	protected void createWorld() throws IOException {
+		hitboxes.clear();
 		getWorld(worldCSV);
 		renderWorld();
 	}

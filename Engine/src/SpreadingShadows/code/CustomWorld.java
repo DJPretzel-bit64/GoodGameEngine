@@ -10,6 +10,9 @@ import engine.utility.Vec2;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+
+import static java.lang.Math.clamp;
 
 public class CustomWorld extends World {
 
@@ -18,6 +21,7 @@ public class CustomWorld extends World {
 	Entity player;
 	Mar mar;
 	Timer corruptionTimer = new Timer(500, true);
+	boolean playerCreated = false;
 
 	public CustomWorld(BufferedImage tilemap, File worldCSV, int tileSize, int layer) {
 		super(tilemap, worldCSV, tileSize, layer);
@@ -33,11 +37,14 @@ public class CustomWorld extends World {
 	@Override
 	protected void doStuffWithData(int data, int x, int y, Graphics g) {
 		if(data == PLAYER_NUM) {
-			player = Engine.getEntity("SpreadingShadows.code.CustomPlatformer");
-			assert player != null;
-			player.setPos(new Vec2(x, y));
-			player.setSize(new Vec2(tileSize));
-			player.setTexture(tiles[data]);
+			if(!playerCreated) {
+				player = Engine.getEntity("SpreadingShadows.code.CustomPlatformer");
+				assert player != null;
+				player.setPos(new Vec2(x, y));
+				player.setSize(new Vec2(tileSize));
+				player.setTexture(tiles[data]);
+				playerCreated = true;
+			}
 		}
 		else if(contains(MAR_NUMS, data)) {
 			super.doStuffWithData(data, x, y, g);
@@ -54,11 +61,49 @@ public class CustomWorld extends World {
 	}
 
 	private void spread() {
-		for(int[] line : worldData) {
-			for(int data : line) {
-				System.out.println(data);
+		ArrayList<int[]> newWorldData = new ArrayList<>();
+        for (int[] data : worldData) {
+            int[] line = new int[data.length];
+            System.arraycopy(data, 0, line, 0, line.length);
+			newWorldData.add(line);
+        }
+
+		for(int i = 0; i < newWorldData.size(); i++) {
+			int[] line = newWorldData.get(i);
+			for(int j = 0; j < line.length; j++) {
+				int data = line[j];
+				if(!contains(MAR_NUMS, data) && data != -1) {
+					if(checkSurroundings(i, j))
+						line[j] = data + 5;
+				}
 			}
 		}
+		worldData = new ArrayList<>();
+		for (int[] data : newWorldData) {
+			int[] line = new int[data.length];
+			System.arraycopy(data, 0, line, 0, line.length);
+			worldData.add(line);
+		}
+		mar.clearMar();
+		hitboxes.clear();
+		renderWorld();
+	}
+
+	boolean checkSurroundings(int i, int j) {
+		boolean mar;
+		int maxI = worldData.size() - 1;
+		int maxJ = worldData.getFirst().length;
+
+		mar = contains(MAR_NUMS, worldData.get(clamp(i + 1, 0, maxI))[clamp(j - 1, 0, maxJ)]);
+		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i + 1, 0, maxI))[clamp(j, 0, maxJ)]);
+		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i + 1, 0, maxI))[clamp(j + 1, 0, maxJ)]);
+		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i, 0, maxI))[clamp(j - 1, 0, maxJ)]);
+		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i, 0, maxI))[clamp(j + 1, 0, maxJ)]);
+		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i - 1, 0, maxI))[clamp(j - 1, 0, maxJ)]);
+		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i - 1, 0, maxI))[clamp(j, 0, maxJ)]);
+		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i - 1, 0, maxI))[clamp(j + 1, 0, maxJ)]);
+
+		return mar;
 	}
 
 	public boolean contains(int[] nums, int data) {
