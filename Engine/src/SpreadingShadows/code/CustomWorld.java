@@ -11,17 +11,20 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static java.lang.Math.clamp;
 
 public class CustomWorld extends World {
 
 	final int PLAYER_NUM = 10;
+	final int FREQUENCY = 3;
 	final int[] MAR_NUMS = {5, 6, 7, 8, 9, 16, 17, 18, 26, 27, 28, 36, 37, 38, 47, 57};
 	Entity player;
 	Mar mar;
 	Timer corruptionTimer = new Timer(500, true);
 	boolean playerCreated = false;
+	Random random = new Random(System.nanoTime());
 
 	public CustomWorld(BufferedImage tilemap, File worldCSV, int tileSize, int layer) {
 		super(tilemap, worldCSV, tileSize, layer);
@@ -73,7 +76,7 @@ public class CustomWorld extends World {
 			for(int j = 0; j < line.length; j++) {
 				int data = line[j];
 				if(!contains(MAR_NUMS, data) && data != -1 && data != PLAYER_NUM) {
-					if(checkSurroundings(i, j))
+					if(checkSurroundings(i, j) && random.nextInt(FREQUENCY) == 0)
 						line[j] = data + 5;
 				}
 			}
