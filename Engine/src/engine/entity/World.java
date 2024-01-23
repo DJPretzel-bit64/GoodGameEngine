@@ -12,9 +12,11 @@ import java.util.Scanner;
 
 public class World extends BasicEntity {
 
-	protected	final	File			worldCSV;
-	protected	final	int				tileSize;
-	protected 			BufferedImage[]	tiles;
+	protected	final	File				worldCSV;
+	protected	final	int					tileSize;
+	protected 			BufferedImage[]		tiles;
+	protected			int					width, height;
+	protected			ArrayList<int[]>	worldData;
 
 	public World(BufferedImage tilemap, File worldCSV, int tileSize, int layer) {
 		super(new Vec2(), new Vec2(), tilemap, new ArrayList<>(), layer);
@@ -34,6 +36,11 @@ public class World extends BasicEntity {
 	}
 
 	private void createWorld() throws IOException {
+		getWorld(worldCSV);
+		renderWorld();
+	}
+
+	protected void getWorld(File worldCSV) throws IOException {
 		Scanner scanner = new Scanner(worldCSV);
 
 		tiles = new BufferedImage[(texture.getWidth() / tileSize) * (texture.getHeight() / tileSize)];
@@ -45,21 +52,23 @@ public class World extends BasicEntity {
 			}
 		}
 
-		ArrayList<int[]> worldData = new ArrayList<>();
-		int width = 0, height = 0;
+		worldData = new ArrayList<>();
+		width = 0;
+		height = 0;
 		while(scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			String[] dataString = line.split(",");
 			int length = dataString.length;
 			int[] dataInt = new int[length];
 			width = Math.max(width, length);
-			for(int i = 0; i < length; i++) {
+			for(int i = 0; i < length; i++)
 				dataInt[i] = Integer.parseInt(dataString[i]);
-			}
 			worldData.add(dataInt);
 			height++;
 		}
+	}
 
+	protected void renderWorld() {
 		texture = new BufferedImage(width * tileSize, height * tileSize, BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics g = texture.getGraphics();
 
