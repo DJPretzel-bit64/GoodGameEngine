@@ -17,7 +17,7 @@ public class Timer {
 
 	public boolean expired() {
 		boolean expired = System.currentTimeMillis() - start >= duration;
-		if(loop)
+		if(loop && expired)
 			start += duration;
 		return expired;
 	}
