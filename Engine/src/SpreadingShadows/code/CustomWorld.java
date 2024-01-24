@@ -57,7 +57,7 @@ public class CustomWorld extends World {
 		}
 		else if(contains(TOP_MAR_NUMS, data)) {
 			super.doStuffWithData(data, x, y, g);
-			Mar mar = new Mar(x, y);
+			Mar mar = new Mar(x, y, tileSize);
 			marList.add(mar);
 			Engine.addEntity(mar);
 		}
@@ -125,12 +125,18 @@ public class CustomWorld extends World {
 		return false;
 	}
 
-	public static void removeMar(Orb orb) {
+	public void removeMar(Orb orb) {
 		Engine.removeEntity(orb);
-//		int x = (orb.getPos().xi() / 16);
-//		int y = (orb.getPos().yi() / 16);
-//		Vec2 pos = new Vec2(x * 16, y * 16);
-//		mar.removeMar(pos);
-//		worldData.get(x)[y] -= 5;
+		for(Entity entity : orb.getLastCollisionEntities()) {
+			if(entity instanceof Mar mar) {
+				Engine.removeEntity(mar);
+				worldData.get(mar.y)[mar.x] -= 5;
+				Engine.removeEntities(marList);
+				marList.clear();
+				hitboxes.clear();
+				renderWorld();
+				break;
+			}
+		}
 	}
 }

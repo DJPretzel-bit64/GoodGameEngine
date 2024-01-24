@@ -7,7 +7,11 @@ import java.util.ArrayList;
 
 public class Mar extends BasicEntity {
 
-	public Mar(int x, int y) {
+	public int x, y;
+
+	public Mar(int x, int y, int tileSize) {
 		super(new Vec2(x, y - 9), new Vec2(16, 1), null, new ArrayList<>(), 1, false);
+		this.x = x / tileSize;
+		this.y = y / tileSize;
 	}
 }

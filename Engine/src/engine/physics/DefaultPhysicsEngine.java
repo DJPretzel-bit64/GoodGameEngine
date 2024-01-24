@@ -26,13 +26,14 @@ public class DefaultPhysicsEngine implements PhysicsEngine {
 
 		try {
 			entity.setPos(entity.getPos().plus(new Vec2(entity.getVelocity().x, 0)));
-			for (Entity collisionEntity : getEntities()) {
-				for (Hitbox hitbox : entity.getHitboxes()) {
-					for (Hitbox collisionHitbox : collisionEntity.getHitboxes()) {
-						if (hitbox.intersects(collisionHitbox)) {
-//							if(!entity.getLastCollisions().contains(collisionEntity.getClass().getName()) && iteration == 0)
-							if(iteration == 0)
+			for(Entity collisionEntity : getEntities()) {
+				for(Hitbox hitbox : entity.getHitboxes()) {
+					for(Hitbox collisionHitbox : collisionEntity.getHitboxes()) {
+						if(hitbox.intersects(collisionHitbox)) {
+							if(iteration == 0) {
 								entity.addToLastCollisions(collisionEntity.getClass().getName());
+								entity.addToLastCollisionEntities(collisionEntity);
+							}
 							if (entity.getCollidesWith().contains(collisionEntity.getClass().getName())) {
 								throw new Exception("Break");
 							}
@@ -55,13 +56,15 @@ public class DefaultPhysicsEngine implements PhysicsEngine {
 		double lastPosY = entity.getPos().y;
 		try {
 			entity.setPos(entity.getPos().plus(new Vec2(0, entity.getVelocity().y)));
-			for (Entity collisionEntity : getEntities()) {
-				for (Hitbox hitbox : entity.getHitboxes()) {
-					for (Hitbox collisionHitbox : collisionEntity.getHitboxes()) {
-						if (hitbox.intersects(collisionHitbox)) {
-							if(!entity.getLastCollisions().contains(collisionEntity.getClass().getName()))
+			for(Entity collisionEntity : getEntities()) {
+				for(Hitbox hitbox : entity.getHitboxes()) {
+					for(Hitbox collisionHitbox : collisionEntity.getHitboxes()) {
+						if(hitbox.intersects(collisionHitbox)) {
+							if(iteration == 0) {
 								entity.addToLastCollisions(collisionEntity.getClass().getName());
-							if (entity.getCollidesWith().contains(collisionEntity.getClass().getName())) {
+								entity.addToLastCollisionEntities(collisionEntity);
+							}
+							if(entity.getCollidesWith().contains(collisionEntity.getClass().getName())) {
 								throw new Exception("Break");
 							}
 						}

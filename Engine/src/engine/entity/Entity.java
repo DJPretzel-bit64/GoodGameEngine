@@ -20,6 +20,8 @@ public interface Entity {
 	int getLayer();
 	ArrayList<String> getLastCollisions();
 	void addToLastCollisions(String collision);
+	ArrayList<Entity> getLastCollisionEntities();
+	void addToLastCollisionEntities(Entity entity);
 	boolean checkCollisions();
 	void init();
 	void render(Graphics g);

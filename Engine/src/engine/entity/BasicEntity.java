@@ -19,6 +19,7 @@ public class BasicEntity implements Entity {
 	protected ArrayList<Hitbox> hitboxes = new ArrayList<>();
 	protected ArrayList<String> collidesWith;
 	protected ArrayList<String> lastCollisions = new ArrayList<>();
+	protected ArrayList<Entity> lastCollisionEntities = new ArrayList<>();
 	protected int layer;
 	protected boolean checkCollisions;
 
@@ -90,6 +91,16 @@ public class BasicEntity implements Entity {
 	@Override
 	public void addToLastCollisions(String collision) {
 		lastCollisions.add(collision);
+	}
+
+	@Override
+	public ArrayList<Entity> getLastCollisionEntities() {
+		return new ArrayList<>(lastCollisionEntities);
+	}
+
+	@Override
+	public void addToLastCollisionEntities(Entity entity) {
+		lastCollisionEntities.add(entity);
 	}
 
 	@Override
