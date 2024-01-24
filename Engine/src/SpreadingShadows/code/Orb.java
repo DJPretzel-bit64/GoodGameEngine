@@ -1,6 +1,5 @@
 package SpreadingShadows.code;
 
-import engine.Engine;
 import engine.entity.BasicEntity;
 import engine.utility.Input;
 import engine.utility.Vec2;
@@ -27,10 +26,8 @@ public class Orb extends BasicEntity {
     @Override
     public void update(double delta, Input input) {
 		velocity.y += 500 * delta * delta;
-        if(lastCollisions.contains(Mar.class.getName())) {
+        if(lastCollisions.contains(Mar.class.getName()) || lastCollisions.contains(CustomWorld.class.getName())) {
 			customWorld.removeMar(this);
 		}
-		else if(lastCollisions.contains(CustomWorld.class.getName()))
-			Engine.removeEntity(this);
     }
 }
