@@ -20,8 +20,9 @@ public class BasicEntity implements Entity {
 	protected ArrayList<String> collidesWith;
 	protected ArrayList<String> lastCollisions = new ArrayList<>();
 	protected int layer;
+	protected boolean checkCollisions;
 
-	public BasicEntity(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, int layer) {
+	public BasicEntity(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, int layer, boolean checkCollisions) {
 		this.pos = pos;
 		this.size = size;
 		this.texture = texture;
@@ -30,6 +31,7 @@ public class BasicEntity implements Entity {
 		this.id = random.nextInt();
 		hitboxes.add(new Hitbox(pos, size));
 		this.layer = layer;
+		this.checkCollisions = checkCollisions;
 	}
 
 	@Override
@@ -91,6 +93,11 @@ public class BasicEntity implements Entity {
 	}
 
 	@Override
+	public boolean checkCollisions() {
+		return this.checkCollisions;
+	}
+
+	@Override
 	public void init() {
 	}
 
@@ -100,8 +107,14 @@ public class BasicEntity implements Entity {
 		if(debug) {
 			g.setColor(Color.ORANGE);
 			for (Hitbox hitbox : hitboxes) {
-				Vec2 offset = hitbox.getPos().minus(cameraPos).minus(hitbox.getSize().divide(2));
-				g.drawRect(offset.xi() * scale + width / 2, offset.yi() * scale + height / 2, hitbox.getSize().xi() * scale, hitbox.getSize().yi() * scale);
+				if(overview) {
+					Vec2 offset = hitbox.getPos().minus(hitbox.getSize().divide(2));
+					g.drawRect(offset.xi(), offset.yi(), hitbox.getSize().xi(), hitbox.getSize().yi());
+				}
+				else {
+					Vec2 offset = hitbox.getPos().minus(cameraPos).minus(hitbox.getSize().divide(2));
+					g.drawRect(offset.xi() * scale + width / 2, offset.yi() * scale + height / 2, hitbox.getSize().xi() * scale, hitbox.getSize().yi() * scale);
+				}
 			}
 		}
 	}

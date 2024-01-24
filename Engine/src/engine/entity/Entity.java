@@ -20,6 +20,7 @@ public interface Entity {
 	int getLayer();
 	ArrayList<String> getLastCollisions();
 	void addToLastCollisions(String collision);
+	boolean checkCollisions();
 	void init();
 	void render(Graphics g);
 	void update(double delta, Input input);

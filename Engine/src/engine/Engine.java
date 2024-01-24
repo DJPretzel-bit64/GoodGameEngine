@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.Properties;
 
 public class Engine extends Canvas {
@@ -46,6 +47,7 @@ public class Engine extends Canvas {
 	private					String				cameraEntityName;
 	private					String				physicsEngineName;
 	public	static			boolean				debug;
+	public	static			boolean				overview;
 
 	private					boolean				running;
 	private					boolean				updateFinished;
@@ -106,6 +108,7 @@ public class Engine extends Canvas {
 			entitiesLocation = properties.getProperty("entities", "game/entities");
 			physicsEngineName = properties.getProperty("physics_engine", "default");
 			debug = Boolean.parseBoolean(properties.getProperty("debug", "false"));
+			overview = Boolean.parseBoolean(properties.getProperty("overview", "false"));
 
 			String[] colors = bgColorS.split(",");
 			bgColor = new Color(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]));
@@ -132,6 +135,7 @@ public class Engine extends Canvas {
 					String code = properties.getProperty("code");
 					String collidesWithString = properties.getProperty("collides_with", "");
 					int layer = Integer.parseInt(properties.getProperty("layer", "-1"));
+					boolean checkCollisions = Boolean.parseBoolean(properties.getProperty("check_collisions", "true"));
 					String[] collidesWithArray = collidesWithString.split(",");
 					ArrayList<String> collidesWith = new ArrayList<>(Arrays.asList(collidesWithArray));
 					Vec2 pos = new Vec2(posX, posY);
@@ -147,25 +151,25 @@ public class Engine extends Canvas {
 					switch(type) {
 						case "BasicEntity" -> {
 							if(code == null)
-								entity = new BasicEntity(pos, size, texture, collidesWith, layer);
+								entity = new BasicEntity(pos, size, texture, collidesWith, layer, checkCollisions);
 							else {
 								code = code.replace('/', '.');
 								Class<?> entityClass = loadClass(code);
 								entity = (BasicEntity) entityClass
-										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class)
-										.newInstance(pos, size, texture, collidesWith, layer);
+										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class, boolean.class)
+										.newInstance(pos, size, texture, collidesWith, layer, checkCollisions);
 							}
 						}
 						case "TopDown" -> {
 							double speed = Double.parseDouble(properties.getProperty("speed", "100"));
 							if(code == null)
-								entity = new TopDown(pos, size, texture, collidesWith, layer, speed);
+								entity = new TopDown(pos, size, texture, collidesWith, layer, checkCollisions, speed);
 							else {
 								code = code.replace('/', '.');
 								Class<?> entityClass = loadClass(code);
 								entity = (TopDown) entityClass
-										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class, double.class)
-										.newInstance(pos, size, texture, collidesWith, layer, speed);
+										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class, boolean.class, double.class)
+										.newInstance(pos, size, texture, collidesWith, layer, checkCollisions, speed);
 							}
 						}
 						case "Platformer" -> {
@@ -173,13 +177,13 @@ public class Engine extends Canvas {
 							double jumpSpeed = Double.parseDouble(properties.getProperty("jump_speed", "150"));
 							double gravity = Double.parseDouble(properties.getProperty("gravity", "400"));
 							if(code == null)
-								entity = new Platformer(pos, size, texture, collidesWith, layer, speed, jumpSpeed, gravity);
+								entity = new Platformer(pos, size, texture, collidesWith, layer, checkCollisions, speed, jumpSpeed, gravity);
 							else {
 								code = code.replace('/', '.');
 								Class<?> entityClass = loadClass(code);
 								entity = (Platformer) entityClass
-										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class, double.class, double.class, double.class)
-										.newInstance(pos, size, texture, collidesWith, layer, speed, jumpSpeed, gravity);
+										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class, boolean.class, double.class, double.class, double.class)
+										.newInstance(pos, size, texture, collidesWith, layer, checkCollisions, speed, jumpSpeed, gravity);
 							}
 						}
 						case "World" -> {
@@ -187,13 +191,13 @@ public class Engine extends Canvas {
 							int tileSize = Integer.parseInt(properties.getProperty("tile_size", "16"));
 							File worldCSV = new File(worldCSVFile);
 							if(code == null)
-								entity = new World(texture, worldCSV, tileSize, layer);
+								entity = new World(texture, checkCollisions, worldCSV, tileSize, layer);
 							else {
 								code = code.replace('/', '.');
 								Class<?> entityClass = loadClass(code);
 								entity = (World) entityClass
-										.getDeclaredConstructor(BufferedImage.class, File.class, int.class, int.class)
-										.newInstance(texture, worldCSV, tileSize, layer);
+										.getDeclaredConstructor(BufferedImage.class, boolean.class, File.class, int.class, int.class)
+										.newInstance(texture, checkCollisions, worldCSV, tileSize, layer);
 							}
 						}
 						default -> {
@@ -254,9 +258,10 @@ public class Engine extends Canvas {
 
 			while(running) {
 				if(updateFinished) {
-					render();
+					try {
+						render();
+					} catch(ConcurrentModificationException ignored){}
 					frames++;
-					updateFinished = false;
 				}
 				if (System.currentTimeMillis() - timer >= 1000) {
 					timer += 1000;
@@ -308,7 +313,7 @@ public class Engine extends Canvas {
 		updateEntityList();
 	}
 
-	private void render() {
+	private void render() throws ConcurrentModificationException {
 		if(linux)
 			Toolkit.getDefaultToolkit().sync();
 
@@ -359,12 +364,20 @@ public class Engine extends Canvas {
 		removeList.clear();
 	}
 
-	public static void addToEntityList(Entity entity) {
+	public static void addEntity(Entity entity) {
 		addList.add(entity);
 	}
 
-	public static void removeFromEntityList(Entity entity) {
+	public static void addEntities(ArrayList<Entity> entities) {
+		addList.addAll(entities);
+	}
+
+	public static void removeEntity(Entity entity) {
 		removeList.add(entity);
+	}
+
+	public static void removeEntities(ArrayList<Entity> entities) {
+		removeList.addAll(entities);
 	}
 
 	public static void main(String[] args) {

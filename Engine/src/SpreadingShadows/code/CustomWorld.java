@@ -10,6 +10,7 @@ import engine.utility.Vec2;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -20,21 +21,26 @@ public class CustomWorld extends World {
 	final int PLAYER_NUM = 10;
 	final int FREQUENCY = 3;
 	final int[] MAR_NUMS = {5, 6, 7, 8, 9, 16, 17, 18, 26, 27, 28, 36, 37, 38, 47, 57};
+	final int[] TOP_MAR_NUMS = {6, 7, 9, 18, 28, 37, 38, 47};
 	Entity player;
-	static Mar mar;
+	ArrayList<Entity> marList = new ArrayList<>();
 	Timer corruptionTimer = new Timer(500, true);
 	boolean playerCreated = false;
 	Random random = new Random(System.nanoTime());
 
-	public CustomWorld(BufferedImage tilemap, File worldCSV, int tileSize, int layer) {
-		super(tilemap, worldCSV, tileSize, layer);
+	public CustomWorld(BufferedImage tilemap, boolean checkCollisions, File worldCSV, int tileSize, int layer) {
+		super(tilemap, checkCollisions, worldCSV, tileSize, layer);
 	}
 
 	@Override
 	public void init() {
-		mar = (Mar) Engine.getEntity("SpreadingShadows.code.Mar");
 		corruptionTimer.start();
 		super.init();
+	}
+
+	@Override
+	public void createWorld() throws IOException {
+		super.createWorld();
 	}
 
 	@Override
@@ -49,9 +55,11 @@ public class CustomWorld extends World {
 				playerCreated = true;
 			}
 		}
-		else if(contains(MAR_NUMS, data)) {
+		else if(contains(TOP_MAR_NUMS, data)) {
 			super.doStuffWithData(data, x, y, g);
-			mar.addMar(x, y);
+			Mar mar = new Mar(x, y);
+			marList.add(mar);
+			Engine.addEntity(mar);
 		}
 		else
 			super.doStuffWithData(data, x, y, g);
@@ -75,8 +83,8 @@ public class CustomWorld extends World {
 			int[] line = newWorldData.get(i);
 			for(int j = 0; j < line.length; j++) {
 				int data = line[j];
-				if(!contains(MAR_NUMS, data) && data != -1 && data != PLAYER_NUM) {
-					if(checkSurroundings(i, j) && random.nextInt(FREQUENCY) == 0)
+				if(!contains(MAR_NUMS, data) && data != -1 && data != PLAYER_NUM && checkSurroundings(i, j)) {
+					if(random.nextInt(FREQUENCY) == 0)
 						line[j] = data + 5;
 				}
 			}
@@ -87,7 +95,8 @@ public class CustomWorld extends World {
 			System.arraycopy(data, 0, line, 0, line.length);
 			worldData.add(line);
 		}
-		mar.clearMar();
+		Engine.removeEntities(marList);
+		marList.clear();
 		hitboxes.clear();
 		renderWorld();
 	}
@@ -117,7 +126,7 @@ public class CustomWorld extends World {
 	}
 
 	public static void removeMar(Orb orb) {
-		Engine.removeFromEntityList(orb);
+		Engine.removeEntity(orb);
 //		int x = (orb.getPos().xi() / 16);
 //		int y = (orb.getPos().yi() / 16);
 //		Vec2 pos = new Vec2(x * 16, y * 16);

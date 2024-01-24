@@ -18,8 +18,8 @@ public class World extends BasicEntity {
 	protected			int					width, height;
 	protected	static	ArrayList<int[]>	worldData;
 
-	public World(BufferedImage tilemap, File worldCSV, int tileSize, int layer) {
-		super(new Vec2(), new Vec2(), tilemap, new ArrayList<>(), layer);
+	public World(BufferedImage tilemap, boolean checkCollisions, File worldCSV, int tileSize, int layer) {
+		super(new Vec2(), new Vec2(), tilemap, new ArrayList<>(), layer, checkCollisions);
 
 		this.tileSize = tileSize;
 		this.texture = tilemap;

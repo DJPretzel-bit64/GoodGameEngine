@@ -14,8 +14,10 @@ public class DefaultPhysicsEngine implements PhysicsEngine {
 	@Override
 	public void checkCollisions(ArrayList<Entity> entities) {
 		for(Entity entity : entities) {
-			checkX(entity, 0);
-			checkY(entity, 0);
+			if(entity.checkCollisions()) {
+				checkX(entity, 0);
+				checkY(entity, 0);
+			}
 		}
 	}
 
@@ -28,7 +30,8 @@ public class DefaultPhysicsEngine implements PhysicsEngine {
 				for (Hitbox hitbox : entity.getHitboxes()) {
 					for (Hitbox collisionHitbox : collisionEntity.getHitboxes()) {
 						if (hitbox.intersects(collisionHitbox)) {
-							if(!entity.getLastCollisions().contains(collisionEntity.getClass().getName()))
+//							if(!entity.getLastCollisions().contains(collisionEntity.getClass().getName()) && iteration == 0)
+							if(iteration == 0)
 								entity.addToLastCollisions(collisionEntity.getClass().getName());
 							if (entity.getCollidesWith().contains(collisionEntity.getClass().getName())) {
 								throw new Exception("Break");

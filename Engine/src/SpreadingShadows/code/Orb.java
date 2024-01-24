@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Orb extends BasicEntity {
 
 	public Orb(Vec2 velocity, Vec2 pos) {
-        super(pos, new Vec2(4, 4), null, new ArrayList<>(), 1);
+        super(pos, new Vec2(4, 4), null, new ArrayList<>(), 1, true);
 		try {
 			this.texture = ImageIO.read(new File("SpreadingShadows/res/orb.png"));
 		}catch(IOException ignored) {}
@@ -28,6 +28,6 @@ public class Orb extends BasicEntity {
 			CustomWorld.removeMar(this);
 		}
 		else if(lastCollisions.contains(CustomWorld.class.getName()))
-			Engine.removeFromEntityList(this);
+			Engine.removeEntity(this);
     }
 }
