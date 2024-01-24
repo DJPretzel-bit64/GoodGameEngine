@@ -42,7 +42,7 @@ public class CustomPlatformer extends Platformer {
 		}
 		if(input.chars[KeyEvent.VK_Q] && orbTimer.expired()) {
 			orbTimer.start();
-			Engine.addEntity(new Orb(velocity.times(1.1), pos, customWorld));
+			Engine.addEntity(new Orb(velocity.times(2), pos, customWorld));
 		}
 		super.update(delta, input);
 	}

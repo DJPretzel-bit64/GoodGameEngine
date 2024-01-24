@@ -21,7 +21,6 @@ public class CustomWorld extends World {
 	final int PLAYER_NUM = 10;
 	final int FREQUENCY = 3;
 	final int[] MAR_NUMS = {5, 6, 7, 8, 9, 16, 17, 18, 26, 27, 28, 36, 37, 38, 47, 57};
-	final int[] TOP_MAR_NUMS = {6, 7, 9, 18, 28, 37, 38, 47};
 	Entity player;
 	ArrayList<Entity> marList = new ArrayList<>();
 	Timer corruptionTimer = new Timer(500, true);
@@ -55,7 +54,7 @@ public class CustomWorld extends World {
 				playerCreated = true;
 			}
 		}
-		else if(contains(TOP_MAR_NUMS, data)) {
+		else if(contains(MAR_NUMS, data)) {
 			super.doStuffWithData(data, x, y, g);
 			Mar mar = new Mar(x, y, tileSize);
 			marList.add(mar);
