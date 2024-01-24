@@ -2,8 +2,6 @@ package engine.physics;
 
 import engine.utility.Vec2;
 
-import java.awt.*;
-
 public class Hitbox {
 
 	private Vec2 pos, size;
@@ -31,9 +29,23 @@ public class Hitbox {
 
 	public boolean intersects(Hitbox that) {
 		Vec2 thisOffset = this.pos.minus(this.size.divide(2));
-		Rectangle r1 = new Rectangle(thisOffset.xi(), thisOffset.yi(), this.size.xi(), this.size.yi());
 		Vec2 thatOffset = that.pos.minus(that.size.divide(2));
-		Rectangle r2 = new Rectangle(thatOffset.xi(), thatOffset.yi(), that.size.xi(), that.size.yi());
-		return r1.intersects(r2);
+		double tw = this.size.x;
+		double th = this.size.y;
+		double rw = that.size.x;
+		double rh = that.size.y;
+		if (rw > 0 && rh > 0 && tw > 0 && th > 0) {
+			double tx = thisOffset.x;
+			double ty = thisOffset.y;
+			double rx = thatOffset.x;
+			double ry = thatOffset.y;
+			rw += rx;
+			rh += ry;
+			tw += tx;
+			th += ty;
+			return (rw < rx || rw > tx) && (rh < ry || rh > ty) && (tw < tx || tw > rx) && (th < ty || th > ry);
+		} else {
+			return false;
+		}
 	}
 }

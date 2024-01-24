@@ -24,6 +24,12 @@ public class CustomPlatformer extends Platformer {
 		corruption[0] = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
 		for(int i = 0; i < 4; i++)
 			corruption[i + 1] = texture.getSubimage(0, i * 16 + 32, 16, 16);
+		this.hitboxes.getFirst().setSize(new Vec2(14, 14));
+	}
+
+	@Override
+	public void setSize(Vec2 size) {
+		this.size = size;
 	}
 
 	@Override
