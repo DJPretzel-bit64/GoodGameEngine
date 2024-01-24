@@ -23,7 +23,7 @@ public class CustomWorld extends World {
 	final int[] MAR_NUMS = {5, 6, 7, 8, 9, 16, 17, 18, 26, 27, 28, 36, 37, 38, 47, 57};
 	Entity player;
 	ArrayList<Entity> marList = new ArrayList<>();
-	Timer corruptionTimer = new Timer(500, true);
+	Timer corruptionTimer = new Timer(1000, true);
 	boolean playerCreated = false;
 	Random random = new Random(System.nanoTime());
 
@@ -101,20 +101,17 @@ public class CustomWorld extends World {
 	}
 
 	boolean checkSurroundings(int i, int j) {
-		boolean mar;
 		int maxI = worldData.size() - 1;
-		int maxJ = worldData.getFirst().length;
+		int maxJ = worldData.getFirst().length - 1;
 
-		mar = contains(MAR_NUMS, worldData.get(clamp(i + 1, 0, maxI))[clamp(j - 1, 0, maxJ)]);
-		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i + 1, 0, maxI))[clamp(j, 0, maxJ)]);
-		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i + 1, 0, maxI))[clamp(j + 1, 0, maxJ)]);
-		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i, 0, maxI))[clamp(j - 1, 0, maxJ)]);
-		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i, 0, maxI))[clamp(j + 1, 0, maxJ)]);
-		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i - 1, 0, maxI))[clamp(j - 1, 0, maxJ)]);
-		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i - 1, 0, maxI))[clamp(j, 0, maxJ)]);
-		mar = mar || contains(MAR_NUMS, worldData.get(clamp(i - 1, 0, maxI))[clamp(j + 1, 0, maxJ)]);
+		for(int k = -1; k <= 1; k++) {
+			for(int l = -1; l <= 1; l++) {
+				if(contains(MAR_NUMS, worldData.get(clamp(i + k, 0, maxI))[clamp(j + l, 0, maxJ)]) && (k != 0 && j != 0))
+					return true;
+			}
+		}
 
-		return mar;
+		return false;
 	}
 
 	public boolean contains(int[] nums, int data) {
@@ -129,12 +126,26 @@ public class CustomWorld extends World {
 		for(Entity entity : orb.getLastCollisionEntities()) {
 			if(entity instanceof Mar mar) {
 				Engine.removeEntity(mar);
-				worldData.get(mar.y)[mar.x] -= 5;
+				removeMarFromWorld(mar.x, mar.y);
 				Engine.removeEntities(marList);
 				marList.clear();
 				hitboxes.clear();
 				renderWorld();
 				break;
+			}
+		}
+	}
+
+	private void removeMarFromWorld(int x, int y) {
+		int maxY = worldData.size() - 1;
+		int maxX = worldData.getFirst().length - 1;
+
+		for(int i = -1; i <= 1; i++) {
+			for(int j = -1; j <= 1; j++) {
+				int relY = clamp(y + j, 0, maxY);
+				int relX = clamp(x + i, 0, maxX);
+				if(contains(MAR_NUMS, worldData.get(relY)[relX]))
+					worldData.get(relY)[relX] -= 5;
 			}
 		}
 	}

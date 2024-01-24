@@ -260,6 +260,7 @@ public class Engine extends Canvas {
 				if(updateFinished) {
 					try {
 						render();
+						updateFinished = false;
 					} catch(ConcurrentModificationException ignored){}
 					frames++;
 				}
