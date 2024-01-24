@@ -21,7 +21,7 @@ public class CustomWorld extends World {
 	final int FREQUENCY = 3;
 	final int[] MAR_NUMS = {5, 6, 7, 8, 9, 16, 17, 18, 26, 27, 28, 36, 37, 38, 47, 57};
 	Entity player;
-	Mar mar;
+	static Mar mar;
 	Timer corruptionTimer = new Timer(500, true);
 	boolean playerCreated = false;
 	Random random = new Random(System.nanoTime());
@@ -114,5 +114,14 @@ public class CustomWorld extends World {
 			if(num == data)
 				return true;
 		return false;
+	}
+
+	public static void removeMar(Orb orb) {
+		Engine.removeFromEntityList(orb);
+//		int x = (orb.getPos().xi() / 16);
+//		int y = (orb.getPos().yi() / 16);
+//		Vec2 pos = new Vec2(x * 16, y * 16);
+//		mar.removeMar(pos);
+//		worldData.get(x)[y] -= 5;
 	}
 }

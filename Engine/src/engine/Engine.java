@@ -52,6 +52,8 @@ public class Engine extends Canvas {
 	private					boolean				linux;
 	private					double				sps;
 	private	static	final	ArrayList<Entity>	entities = new ArrayList<>();
+	private	static	final	ArrayList<Entity>	addList = new ArrayList<>();
+	private static	final	ArrayList<Entity>	removeList = new ArrayList<>();
 	public	static			Vec2				cameraPos = new Vec2();
 	private					PhysicsEngine		physicsEngine;
 
@@ -72,14 +74,10 @@ public class Engine extends Canvas {
 		input = new Input();
 		this.setPreferredSize(new Dimension(width, height));
 		this.addKeyListener(input);
-		this.addMouseListener(input);
-		this.addMouseMotionListener(input);
 
 		if(separateWindow) {
 			frame.setTitle(title);
 			frame.addKeyListener(input);
-			frame.addMouseListener(input);
-			frame.addMouseMotionListener(input);
 			frame.add(this);
 			frame.pack();
 			frame.setLocationRelativeTo(null);
@@ -130,8 +128,7 @@ public class Engine extends Canvas {
 					double posY = Double.parseDouble(properties.getProperty("pos_y", "0"));
 					double sizeX = Double.parseDouble(properties.getProperty("size_x", "16"));
 					double sizeY = Double.parseDouble(properties.getProperty("size_y", "16"));
-					String textureLocation = properties.getProperty("texture",
-							"engine/res/missing.png");
+					String textureLocation = properties.getProperty("texture", "engine/res/missing.png");
 					String code = properties.getProperty("code");
 					String collidesWithString = properties.getProperty("collides_with", "");
 					int layer = Integer.parseInt(properties.getProperty("layer", "-1"));
@@ -307,6 +304,8 @@ public class Engine extends Canvas {
 			}
 			entity.update(delta, input);
 		}
+
+		updateEntityList();
 	}
 
 	private void render() {
@@ -351,6 +350,21 @@ public class Engine extends Canvas {
 				return entity;
 		}
 		return null;
+	}
+
+	private void updateEntityList() {
+		entities.addAll(addList);
+		entities.removeAll(removeList);
+		addList.clear();
+		removeList.clear();
+	}
+
+	public static void addToEntityList(Entity entity) {
+		addList.add(entity);
+	}
+
+	public static void removeFromEntityList(Entity entity) {
+		removeList.add(entity);
 	}
 
 	public static void main(String[] args) {

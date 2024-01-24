@@ -1,11 +1,13 @@
 package SpreadingShadows.code;
 
+import engine.Engine;
 import engine.entity.Platformer;
 import engine.utility.Input;
 import engine.utility.Timer;
 import engine.utility.Vec2;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -13,6 +15,7 @@ public class CustomPlatformer extends Platformer {
 
 	int corruptionLevel = 0;
 	Timer corruptionTimer = new Timer(500, false);
+	Timer orbTimer = new Timer(500, false);
 	BufferedImage[] corruption = new BufferedImage[5];
 
 	public CustomPlatformer(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, int layer, double speed, double jumpSpeed, double gravity) {
@@ -30,6 +33,10 @@ public class CustomPlatformer extends Platformer {
 				corruptionLevel = Math.min(corruptionLevel + 1, 5);
 			else
 				corruptionLevel = Math.max(corruptionLevel - 1, 0);
+		}
+		if(input.chars[KeyEvent.VK_Q] && orbTimer.expired()) {
+			orbTimer.start();
+			Engine.addToEntityList(new Orb(velocity.times(1.1), pos));
 		}
 		super.update(delta, input);
 	}

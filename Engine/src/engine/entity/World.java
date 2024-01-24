@@ -16,7 +16,7 @@ public class World extends BasicEntity {
 	protected	final	int					tileSize;
 	protected 			BufferedImage[]		tiles;
 	protected			int					width, height;
-	protected			ArrayList<int[]>	worldData;
+	protected	static	ArrayList<int[]>	worldData;
 
 	public World(BufferedImage tilemap, File worldCSV, int tileSize, int layer) {
 		super(new Vec2(), new Vec2(), tilemap, new ArrayList<>(), layer);

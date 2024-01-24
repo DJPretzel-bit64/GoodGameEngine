@@ -91,7 +91,8 @@ public class BasicEntity implements Entity {
 	}
 
 	@Override
-	public void init() {}
+	public void init() {
+	}
 
 	@Override
 	public void render(Graphics g) {

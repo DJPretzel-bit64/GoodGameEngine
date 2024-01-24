@@ -1,12 +1,13 @@
 package engine.utility;
 
-import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
-public class Input implements KeyListener, MouseMotionListener, MouseListener {
+public class Input extends KeyAdapter {
 
 	public boolean up, down, left, right, escape;
+	public boolean[] chars = new boolean[65536];
 
-	@Override public void keyTyped(KeyEvent e) {}
 	@Override
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyCode()) {
@@ -16,6 +17,7 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener {
 			case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> right = true;
 			case KeyEvent.VK_ESCAPE, KeyEvent.VK_E -> escape = true;
 		}
+		chars[e.getKeyCode()] = true;
 	}
 
 	@Override
@@ -27,41 +29,6 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener {
 			case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> right = false;
 			case KeyEvent.VK_ESCAPE, KeyEvent.VK_E -> escape = false;
 		}
-
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-
+		chars[e.getKeyCode()] = false;
 	}
 }

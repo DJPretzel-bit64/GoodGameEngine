@@ -16,6 +16,10 @@ public class Mar extends BasicEntity {
 		hitboxes.add(new Hitbox(new Vec2(x, y - 8), new Vec2(16, 1)));
 	}
 
+	public void removeMar(Vec2 pos) {
+		hitboxes.removeIf(hitbox -> hitbox.getPos().equals(pos));
+	}
+
 	public void clearMar() {
 		hitboxes.clear();
 	}
