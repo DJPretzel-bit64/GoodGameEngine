@@ -37,8 +37,6 @@ public class CustomPlatformer extends Platformer {
 			corruptionTimer.start();
 			if(lastCollisions.contains(Mar.class.getName()))
 				corruptionLevel = Math.min(corruptionLevel + 1, 5);
-			else
-				corruptionLevel = Math.max(corruptionLevel - 1, 0);
 		}
 		if(input.chars[KeyEvent.VK_Q] && orbTimer.expired()) {
 			orbTimer.start();
