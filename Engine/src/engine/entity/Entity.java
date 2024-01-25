@@ -23,6 +23,8 @@ public interface Entity {
 	ArrayList<Entity> getLastCollisionEntities();
 	void addToLastCollisionEntities(Entity entity);
 	boolean checkCollisions();
+	boolean shouldInitiate();
+	boolean isInitiated();
 	void init();
 	void render(Graphics g);
 	void update(double delta, Input input);

@@ -10,8 +10,8 @@ public class TopDown extends BasicEntity {
 
 	private final double speed;
 
-	public TopDown(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, int layer, boolean checkCollisions, double speed) {
-		super(pos, size, texture, collidesWith, layer, checkCollisions);
+	public TopDown(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, int layer, boolean checkCollisions, boolean shouldInitiate, double speed) {
+		super(pos, size, texture, collidesWith, layer, checkCollisions, shouldInitiate);
 		this.speed = speed;
 	}
 

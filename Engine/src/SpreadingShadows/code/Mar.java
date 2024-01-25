@@ -10,7 +10,7 @@ public class Mar extends BasicEntity {
 	public int x, y;
 
 	public Mar(int x, int y, int tileSize) {
-		super(new Vec2(x, y), new Vec2(18, 18), null, new ArrayList<>(), 1, false);
+		super(new Vec2(x, y), new Vec2(18, 18), null, new ArrayList<>(), 1, false, false);
 		this.x = x / tileSize;
 		this.y = y / tileSize;
 	}

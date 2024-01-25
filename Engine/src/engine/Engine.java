@@ -136,6 +136,7 @@ public class Engine extends Canvas {
 					String collidesWithString = properties.getProperty("collides_with", "");
 					int layer = Integer.parseInt(properties.getProperty("layer", "-1"));
 					boolean checkCollisions = Boolean.parseBoolean(properties.getProperty("check_collisions", "true"));
+					boolean initiateAutomatically = Boolean.parseBoolean(properties.getProperty("initiate_automatically", "true"));
 					String[] collidesWithArray = collidesWithString.split(",");
 					ArrayList<String> collidesWith = new ArrayList<>(Arrays.asList(collidesWithArray));
 					Vec2 pos = new Vec2(posX, posY);
@@ -151,25 +152,25 @@ public class Engine extends Canvas {
 					switch(type) {
 						case "BasicEntity" -> {
 							if(code == null)
-								entity = new BasicEntity(pos, size, texture, collidesWith, layer, checkCollisions);
+								entity = new BasicEntity(pos, size, texture, collidesWith, layer, checkCollisions, initiateAutomatically);
 							else {
 								code = code.replace('/', '.');
 								Class<?> entityClass = loadClass(code);
 								entity = (BasicEntity) entityClass
-										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class, boolean.class)
-										.newInstance(pos, size, texture, collidesWith, layer, checkCollisions);
+										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class, boolean.class, boolean.class)
+										.newInstance(pos, size, texture, collidesWith, layer, checkCollisions, initiateAutomatically);
 							}
 						}
 						case "TopDown" -> {
 							double speed = Double.parseDouble(properties.getProperty("speed", "100"));
 							if(code == null)
-								entity = new TopDown(pos, size, texture, collidesWith, layer, checkCollisions, speed);
+								entity = new TopDown(pos, size, texture, collidesWith, layer, checkCollisions, initiateAutomatically, speed);
 							else {
 								code = code.replace('/', '.');
 								Class<?> entityClass = loadClass(code);
 								entity = (TopDown) entityClass
-										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class, boolean.class, double.class)
-										.newInstance(pos, size, texture, collidesWith, layer, checkCollisions, speed);
+										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class, boolean.class, boolean.class, double.class)
+										.newInstance(pos, size, texture, collidesWith, layer, checkCollisions, initiateAutomatically, speed);
 							}
 						}
 						case "Platformer" -> {
@@ -177,13 +178,13 @@ public class Engine extends Canvas {
 							double jumpSpeed = Double.parseDouble(properties.getProperty("jump_speed", "150"));
 							double gravity = Double.parseDouble(properties.getProperty("gravity", "400"));
 							if(code == null)
-								entity = new Platformer(pos, size, texture, collidesWith, layer, checkCollisions, speed, jumpSpeed, gravity);
+								entity = new Platformer(pos, size, texture, collidesWith, layer, checkCollisions, initiateAutomatically, speed, jumpSpeed, gravity);
 							else {
 								code = code.replace('/', '.');
 								Class<?> entityClass = loadClass(code);
 								entity = (Platformer) entityClass
-										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class, boolean.class, double.class, double.class, double.class)
-										.newInstance(pos, size, texture, collidesWith, layer, checkCollisions, speed, jumpSpeed, gravity);
+										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, ArrayList.class, int.class, boolean.class, boolean.class, double.class, double.class, double.class)
+										.newInstance(pos, size, texture, collidesWith, layer, checkCollisions, initiateAutomatically, speed, jumpSpeed, gravity);
 							}
 						}
 						case "World" -> {
@@ -191,13 +192,13 @@ public class Engine extends Canvas {
 							int tileSize = Integer.parseInt(properties.getProperty("tile_size", "16"));
 							File worldCSV = new File(worldCSVFile);
 							if(code == null)
-								entity = new World(texture, checkCollisions, worldCSV, tileSize, layer);
+								entity = new World(texture, checkCollisions, initiateAutomatically, worldCSV, tileSize, layer);
 							else {
 								code = code.replace('/', '.');
 								Class<?> entityClass = loadClass(code);
 								entity = (World) entityClass
-										.getDeclaredConstructor(BufferedImage.class, boolean.class, File.class, int.class, int.class)
-										.newInstance(texture, checkCollisions, worldCSV, tileSize, layer);
+										.getDeclaredConstructor(BufferedImage.class, boolean.class, boolean.class, File.class, int.class, int.class)
+										.newInstance(texture, checkCollisions, initiateAutomatically, worldCSV, tileSize, layer);
 							}
 						}
 						default -> {
@@ -216,9 +217,9 @@ public class Engine extends Canvas {
 				}
 			}
 
-			for(Entity entity : entities) {
-				entity.init();
-			}
+			for(Entity entity : entities)
+				if(entity.shouldInitiate())
+					entity.init();
 		} catch(Exception e) {
 			System.out.println("Could not load folder " + entitiesLocation + ". Cause: " + e);
 			e.printStackTrace();
@@ -305,10 +306,11 @@ public class Engine extends Canvas {
 
 		physicsEngine.checkCollisions(entities);
 		for(Entity entity : entities) {
-			if(entity.toString().equals(cameraEntityName)) {
-				cameraPos = new Vec2(entity.getPos());
+			if(entity.isInitiated()) {
+				if(entity.toString().equals(cameraEntityName))
+					cameraPos = new Vec2(entity.getPos());
+				entity.update(delta, input);
 			}
-			entity.update(delta, input);
 		}
 
 		updateEntityList();
@@ -329,12 +331,12 @@ public class Engine extends Canvas {
 		g.fillRect(0, 0, width, height);
 
 		for(Entity entity : entities)
-			if(entity.getLayer() == -1)
+			if(entity.getLayer() == -1 && entity.isInitiated())
 				entity.render(g);
 
 		for(int i = 0; i < numLayers; i++)
 			for(Entity entity : entities)
-				if(entity.getLayer() == i)
+				if(entity.getLayer() == i && entity.isInitiated())
 					entity.render(g);
 
 		g.dispose();

@@ -10,7 +10,6 @@ import engine.utility.Vec2;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -27,19 +26,15 @@ public class CustomWorld extends World {
 	boolean playerCreated = false;
 	Random random = new Random(System.nanoTime());
 
-	public CustomWorld(BufferedImage tilemap, boolean checkCollisions, File worldCSV, int tileSize, int layer) {
-		super(tilemap, checkCollisions, worldCSV, tileSize, layer);
+	public CustomWorld(BufferedImage tilemap, boolean checkCollisions, boolean shouldInitiate, File worldCSV, int tileSize, int layer) {
+		super(tilemap, checkCollisions, shouldInitiate, worldCSV, tileSize, layer);
 	}
 
 	@Override
 	public void init() {
 		corruptionTimer.start();
 		super.init();
-	}
-
-	@Override
-	public void createWorld() throws IOException {
-		super.createWorld();
+		System.out.println(initiated);
 	}
 
 	@Override

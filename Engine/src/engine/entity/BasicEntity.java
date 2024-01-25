@@ -22,8 +22,10 @@ public class BasicEntity implements Entity {
 	protected ArrayList<Entity> lastCollisionEntities = new ArrayList<>();
 	protected int layer;
 	protected boolean checkCollisions;
+	protected boolean initiated = false;
+	protected boolean shouldInitiate;
 
-	public BasicEntity(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, int layer, boolean checkCollisions) {
+	public BasicEntity(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, int layer, boolean checkCollisions, boolean shouldInitiate) {
 		this.pos = pos;
 		this.size = size;
 		this.texture = texture;
@@ -33,6 +35,7 @@ public class BasicEntity implements Entity {
 		hitboxes.add(new Hitbox(pos, size));
 		this.layer = layer;
 		this.checkCollisions = checkCollisions;
+		this.shouldInitiate = shouldInitiate;
 	}
 
 	@Override
@@ -109,7 +112,18 @@ public class BasicEntity implements Entity {
 	}
 
 	@Override
+	public boolean shouldInitiate() {
+		return shouldInitiate;
+	}
+
+	@Override
+	public boolean isInitiated() {
+		return initiated;
+	}
+
+	@Override
 	public void init() {
+		initiated = true;
 	}
 
 	@Override

@@ -19,8 +19,8 @@ public class CustomPlatformer extends Platformer {
 	BufferedImage[] corruption = new BufferedImage[5];
 	CustomWorld customWorld;
 
-	public CustomPlatformer(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, int layer, boolean checkCollisions, double speed, double jumpSpeed, double gravity) {
-		super(pos, size, texture, collidesWith, layer, checkCollisions, speed, jumpSpeed, gravity);
+	public CustomPlatformer(Vec2 pos, Vec2 size, BufferedImage texture, ArrayList<String> collidesWith, int layer, boolean checkCollisions, boolean shouldInitiate, double speed, double jumpSpeed, double gravity) {
+		super(pos, size, texture, collidesWith, layer, checkCollisions, shouldInitiate, speed, jumpSpeed, gravity);
 		corruption[0] = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
 		for(int i = 0; i < 4; i++)
 			corruption[i + 1] = texture.getSubimage(0, i * 16 + 32, 16, 16);
@@ -35,6 +35,7 @@ public class CustomPlatformer extends Platformer {
 	@Override
 	public void init() {
 		this.customWorld = (CustomWorld) Engine.getEntity("SpreadingShadows.code.CustomWorld");
+		super.init();
 	}
 
 	@Override

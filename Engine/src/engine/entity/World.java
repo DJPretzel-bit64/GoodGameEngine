@@ -18,8 +18,8 @@ public class World extends BasicEntity {
 	protected			int					width, height;
 	protected	static	ArrayList<int[]>	worldData;
 
-	public World(BufferedImage tilemap, boolean checkCollisions, File worldCSV, int tileSize, int layer) {
-		super(new Vec2(), new Vec2(), tilemap, new ArrayList<>(), layer, checkCollisions);
+	public World(BufferedImage tilemap, boolean checkCollisions, boolean shouldInitiate, File worldCSV, int tileSize, int layer) {
+		super(new Vec2(), new Vec2(), tilemap, new ArrayList<>(), layer, checkCollisions, shouldInitiate);
 
 		this.tileSize = tileSize;
 		this.texture = tilemap;
@@ -33,6 +33,7 @@ public class World extends BasicEntity {
 		} catch(IOException e) {
 			System.out.println("Error loading world file: " + e);
 		}
+		super.init();
 	}
 
 	protected void createWorld() throws IOException {
