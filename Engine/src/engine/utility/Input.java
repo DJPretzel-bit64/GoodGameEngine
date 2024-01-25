@@ -1,12 +1,12 @@
 package engine.utility;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
-public class Input extends KeyAdapter {
+public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
-	public boolean up, down, left, right, escape;
+	public boolean up, down, left, right, escape, leftClick, rightClick;
 	public boolean[] chars = new boolean[65536];
+	public Vec2 mousePos = new Vec2();
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -31,4 +31,37 @@ public class Input extends KeyAdapter {
 		}
 		chars[e.getKeyCode()] = false;
 	}
+
+	@Override
+	public void mousePressed(MouseEvent mouseEvent) {
+		System.out.println(mouseEvent.getButton());
+		if(mouseEvent.getButton() == 1)
+			leftClick = true;
+		if(mouseEvent.getButton() == 3)
+			rightClick = true;
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent mouseEvent) {
+		if(mouseEvent.getButton() == 1)
+			leftClick = true;
+		if(mouseEvent.getButton() == 3)
+			rightClick = true;
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent mouseEvent) {
+		this.mousePos = new Vec2(mouseEvent.getX(), mouseEvent.getY());
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {}
+	@Override
+	public void mouseEntered(MouseEvent mouseEvent) {}
+	@Override
+	public void mouseExited(MouseEvent mouseEvent) {}
+	@Override
+	public void mouseDragged(MouseEvent mouseEvent) {}
+	@Override
+	public void mouseClicked(MouseEvent mouseEvent) {}
 }

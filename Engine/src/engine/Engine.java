@@ -76,10 +76,14 @@ public class Engine extends Canvas {
 		input = new Input();
 		this.setPreferredSize(new Dimension(width, height));
 		this.addKeyListener(input);
+		this.addMouseListener(input);
+		this.addMouseMotionListener(input);
 
 		if(separateWindow) {
 			frame.setTitle(title);
 			frame.addKeyListener(input);
+			frame.addMouseListener(input);
+			frame.addMouseMotionListener(input);
 			frame.add(this);
 			frame.pack();
 			frame.setLocationRelativeTo(null);
