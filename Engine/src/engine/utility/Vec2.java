@@ -48,6 +48,10 @@ public class Vec2 {
 		return this.times(1 / s);
 	}
 
+	public Vec2 mod(double s) {
+		return new Vec2(x % s, y % s);
+	}
+
 	public double lengthSquared() {
 		return this.x * this.x + this.y * this.y;
 	}

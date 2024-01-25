@@ -34,7 +34,6 @@ public class CustomWorld extends World {
 	public void init() {
 		corruptionTimer.start();
 		super.init();
-		System.out.println(initiated);
 	}
 
 	@Override
