@@ -7,20 +7,14 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 	public boolean up, down, left, right, escape, leftClick, rightClick;
 	public boolean[] chars = new boolean[65536];
 	public Vec2 mousePos = new Vec2();
-	private int width, height;
-
-	public void update(int width, int height) {
-		this.width = width;
-		this.height = height;
-	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_W, KeyEvent.VK_UP, KeyEvent.VK_SPACE -> up = true;
-			case KeyEvent.VK_S, KeyEvent.VK_DOWN -> down = true;
+			case KeyEvent.VK_R, KeyEvent.VK_DOWN -> down = true;
 			case KeyEvent.VK_A, KeyEvent.VK_LEFT -> left = true;
-			case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> right = true;
+			case KeyEvent.VK_S, KeyEvent.VK_RIGHT -> right = true;
 			case KeyEvent.VK_ESCAPE, KeyEvent.VK_E -> escape = true;
 		}
 		chars[e.getKeyCode()] = true;
@@ -30,9 +24,9 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 	public void keyReleased(KeyEvent e) {
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_W, KeyEvent.VK_UP, KeyEvent.VK_SPACE -> up = false;
-			case KeyEvent.VK_S, KeyEvent.VK_DOWN -> down = false;
+			case KeyEvent.VK_R, KeyEvent.VK_DOWN -> down = false;
 			case KeyEvent.VK_A, KeyEvent.VK_LEFT -> left = false;
-			case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> right = false;
+			case KeyEvent.VK_S, KeyEvent.VK_RIGHT -> right = false;
 			case KeyEvent.VK_ESCAPE, KeyEvent.VK_E -> escape = false;
 		}
 		chars[e.getKeyCode()] = false;
@@ -56,7 +50,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseMoved(MouseEvent mouseEvent) {
-		this.mousePos = new Vec2(mouseEvent.getX(), mouseEvent.getY()).minus(new Vec2(width, height).divide(2));
+		this.mousePos = new Vec2(mouseEvent.getX(), mouseEvent.getY());
 	}
 
 	@Override

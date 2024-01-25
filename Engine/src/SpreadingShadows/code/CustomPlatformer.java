@@ -10,6 +10,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import static engine.Engine.height;
+import static engine.Engine.width;
+
 public class CustomPlatformer extends Platformer {
 
 	int corruptionLevel = 0;
@@ -46,7 +49,7 @@ public class CustomPlatformer extends Platformer {
 		}
 		if(input.leftClick && orbTimer.expired()) {
 			orbTimer.start();
-			Vec2 velocity = new Vec2(input.mousePos).divide(75);
+			Vec2 velocity = input.mousePos.minus(new Vec2(width, height).divide(2)).normal().times(5);
 			Engine.addEntity(new Orb(velocity, pos, customWorld));
 		}
 		super.update(delta, input);

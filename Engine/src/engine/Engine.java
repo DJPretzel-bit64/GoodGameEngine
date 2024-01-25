@@ -42,7 +42,7 @@ public class Engine extends Canvas {
 	public	static			int					scale;
 	private					int					initialScale;
 	private					boolean				dynamicScale;
-	private					int					numLayers;
+	public	static			int					numLayers;
 	private					String				entitiesLocation;
 	private					String				cameraEntityName;
 	private					String				physicsEngineName;
@@ -307,8 +307,6 @@ public class Engine extends Canvas {
 			double ratio = Math.min((double)width / initialWidth, (double)height / initialHeight);
 			scale = Math.max((int)(ratio * initialScale), 1);
 		}
-
-		input.update(width, height);
 
 		physicsEngine.checkCollisions(entities);
 		for(Entity entity : entities) {
