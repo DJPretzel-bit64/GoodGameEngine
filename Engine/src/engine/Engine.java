@@ -308,6 +308,8 @@ public class Engine extends Canvas {
 			scale = Math.max((int)(ratio * initialScale), 1);
 		}
 
+		input.update(width, height);
+
 		physicsEngine.checkCollisions(entities);
 		for(Entity entity : entities) {
 			if(entity.isInitiated()) {

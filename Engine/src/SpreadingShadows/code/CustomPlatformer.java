@@ -7,7 +7,6 @@ import engine.utility.Timer;
 import engine.utility.Vec2;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -45,9 +44,10 @@ public class CustomPlatformer extends Platformer {
 			if(lastCollisions.contains(Mar.class.getName()))
 				corruptionLevel = Math.min(corruptionLevel + 1, 5);
 		}
-		if(input.chars[KeyEvent.VK_Q] && orbTimer.expired()) {
+		if(input.leftClick && orbTimer.expired()) {
 			orbTimer.start();
-			Engine.addEntity(new Orb(velocity.times(3), pos, customWorld));
+			Vec2 velocity = new Vec2(input.mousePos).divide(75);
+			Engine.addEntity(new Orb(velocity, pos, customWorld));
 		}
 		super.update(delta, input);
 	}

@@ -7,6 +7,12 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 	public boolean up, down, left, right, escape, leftClick, rightClick;
 	public boolean[] chars = new boolean[65536];
 	public Vec2 mousePos = new Vec2();
+	private int width, height;
+
+	public void update(int width, int height) {
+		this.width = width;
+		this.height = height;
+	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -34,7 +40,6 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
 	@Override
 	public void mousePressed(MouseEvent mouseEvent) {
-		System.out.println(mouseEvent.getButton());
 		if(mouseEvent.getButton() == 1)
 			leftClick = true;
 		if(mouseEvent.getButton() == 3)
@@ -44,14 +49,14 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 	@Override
 	public void mouseReleased(MouseEvent mouseEvent) {
 		if(mouseEvent.getButton() == 1)
-			leftClick = true;
+			leftClick = false;
 		if(mouseEvent.getButton() == 3)
-			rightClick = true;
+			rightClick = false;
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent mouseEvent) {
-		this.mousePos = new Vec2(mouseEvent.getX(), mouseEvent.getY());
+		this.mousePos = new Vec2(mouseEvent.getX(), mouseEvent.getY()).minus(new Vec2(width, height).divide(2));
 	}
 
 	@Override
