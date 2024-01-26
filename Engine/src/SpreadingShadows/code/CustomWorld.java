@@ -2,6 +2,7 @@ package SpreadingShadows.code;
 
 import engine.Engine;
 import engine.entity.Entity;
+import engine.entity.Menu;
 import engine.entity.World;
 import engine.utility.Input;
 import engine.utility.Timer;
@@ -63,8 +64,9 @@ public class CustomWorld extends World {
 	public void update(double delta, Input input) {
 		if(corruptionTimer.expired()) {
 			spread();
-			if(marList.isEmpty())
+			if(marList.isEmpty()) {
 				Objects.requireNonNull(Engine.getEntity(Menu.class.getName())).init();
+			}
 		}
 	}
 

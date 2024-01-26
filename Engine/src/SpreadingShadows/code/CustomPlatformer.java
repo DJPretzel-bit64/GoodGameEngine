@@ -9,6 +9,7 @@ import engine.utility.Vec2;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static engine.Engine.height;
 import static engine.Engine.width;
@@ -62,7 +63,11 @@ public class CustomPlatformer extends Platformer {
 		try {
 			renderImage(g, corruption[corruptionLevel], pos, size);
 		} catch(ArrayIndexOutOfBoundsException e) {
-			System.exit(0);
+			Objects.requireNonNull(Engine.getEntity(LoseMenu.class.getName())).init();
+			Engine.removeEntity(this);
+			Engine.removeEntity(Engine.getEntity(CustomWorld.class.getName()));
+			Engine.removeEntity(Engine.getEntity(Mar.class.getName()));
+			Engine.removeEntity(Engine.getEntity(Background.class.getName()));
 		}
 	}
 }
