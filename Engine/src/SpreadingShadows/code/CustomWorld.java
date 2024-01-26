@@ -66,6 +66,7 @@ public class CustomWorld extends World {
 			spread();
 			if(marList.isEmpty()) {
 				Objects.requireNonNull(Engine.getEntity(Menu.class.getName())).init();
+				CustomPlatformer.removeEverything();
 			}
 		}
 	}

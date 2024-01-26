@@ -64,10 +64,14 @@ public class CustomPlatformer extends Platformer {
 			renderImage(g, corruption[corruptionLevel], pos, size);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			Objects.requireNonNull(Engine.getEntity(LoseMenu.class.getName())).init();
-			Engine.removeEntity(this);
-			Engine.removeEntity(Engine.getEntity(CustomWorld.class.getName()));
-			Engine.removeEntity(Engine.getEntity(Mar.class.getName()));
-			Engine.removeEntity(Engine.getEntity(Background.class.getName()));
+			removeEverything();
 		}
+	}
+
+	public static void removeEverything() {
+		Engine.removeEntity(Engine.getEntity(CustomPlatformer.class.getName()));
+		Engine.removeEntity(Engine.getEntity(CustomWorld.class.getName()));
+		Engine.removeEntity(Engine.getEntity(Mar.class.getName()));
+		Engine.removeEntity(Engine.getEntity(Background.class.getName()));
 	}
 }
