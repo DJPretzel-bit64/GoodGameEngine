@@ -29,12 +29,15 @@ public class Platformer extends BasicEntity {
 		boolean canJump = velocity.y == 0 && lastVelocity.y == 0;
 		lastVelocity = new Vec2(velocity);
 
+		if(velocity.x > 0)
+			velocity.x = Math.max(velocity.x - gravity, 0);
+		if(velocity.x < 0)
+			velocity.x = Math.min(velocity.x + gravity, 0);
+
 		if(input.left)
 			velocity.x = -speed;
 		else if(input.right)
 			velocity.x = speed;
-		else
-			velocity.x = 0;
 
 		if(input.up && canJump)
 			velocity.y = jumpSpeed;

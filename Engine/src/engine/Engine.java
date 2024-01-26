@@ -49,6 +49,7 @@ public class Engine extends Canvas {
 	private					String				physicsEngineName;
 	public	static			boolean				debug;
 	public	static			boolean				overview;
+	public	static			String				layout;
 
 	private					boolean				running;
 	private					boolean				updateFinished;
@@ -114,6 +115,7 @@ public class Engine extends Canvas {
 			physicsEngineName = properties.getProperty("physics_engine", "default");
 			debug = Boolean.parseBoolean(properties.getProperty("debug", "false"));
 			overview = Boolean.parseBoolean(properties.getProperty("overview", "false"));
+			layout = properties.getProperty("layout", "qwerty");
 
 			String[] colors = bgColorS.split(",");
 			bgColor = new Color(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]));

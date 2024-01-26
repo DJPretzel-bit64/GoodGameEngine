@@ -51,6 +51,7 @@ public class CustomPlatformer extends Platformer {
 			orbTimer.start();
 			Vec2 velocity = input.mousePos.minus(new Vec2(width, height).divide(2)).normal().times(5);
 			Engine.addEntity(new Orb(velocity, pos, customWorld));
+			this.velocity = this.velocity.minus(velocity.divide(3));
 		}
 		super.update(delta, input);
 	}

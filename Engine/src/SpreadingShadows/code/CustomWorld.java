@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 import static java.lang.Math.clamp;
@@ -60,8 +61,11 @@ public class CustomWorld extends World {
 
 	@Override
 	public void update(double delta, Input input) {
-		if(corruptionTimer.expired())
+		if(corruptionTimer.expired()) {
 			spread();
+			if(marList.isEmpty())
+				Objects.requireNonNull(Engine.getEntity(Menu.class.getName())).init();
+		}
 	}
 
 	private void spread() {
