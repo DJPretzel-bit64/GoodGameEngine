@@ -45,7 +45,7 @@ public class CustomPlatformer extends Platformer {
 		if(corruptionTimer.expired()) {
 			corruptionTimer.start();
 			if(lastCollisions.contains(Mar.class.getName()))
-				corruptionLevel = Math.min(corruptionLevel + 1, 5);
+				corruptionLevel++;
 		}
 		if(input.leftClick && orbTimer.expired()) {
 			orbTimer.start();
@@ -58,6 +58,10 @@ public class CustomPlatformer extends Platformer {
 	@Override
 	public void render(Graphics g) {
 		super.render(g);
-		renderImage(g, corruption[Math.min(corruptionLevel, 4)], pos, size);
+		try {
+			renderImage(g, corruption[corruptionLevel], pos, size);
+		} catch(ArrayIndexOutOfBoundsException e) {
+			System.exit(0);
+		}
 	}
 }
