@@ -1,5 +1,6 @@
 package engine;
 
+import engine.entity.Menu;
 import engine.entity.*;
 import engine.physics.DefaultPhysicsEngine;
 import engine.physics.PhysicsEngine;
@@ -203,6 +204,17 @@ public class Engine extends Canvas {
 								entity = (World) entityClass
 										.getDeclaredConstructor(BufferedImage.class, boolean.class, boolean.class, File.class, int.class, int.class)
 										.newInstance(texture, checkCollisions, initiateAutomatically, worldCSV, tileSize, layer);
+							}
+						}
+						case "Menu" -> {
+							if(code == null)
+								entity = new Menu(pos, size, texture, initiateAutomatically);
+							else {
+								code = code.replace('/', '.');
+								Class<?> entityClass = loadClass(code);
+								entity = (Menu) entityClass
+										.getDeclaredConstructor(Vec2.class, Vec2.class, BufferedImage.class, boolean.class)
+										.newInstance(pos, size, texture, initiateAutomatically);
 							}
 						}
 						default -> {
