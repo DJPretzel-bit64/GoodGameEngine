@@ -76,10 +76,9 @@ public class CustomWorld extends World {
 			int[] line = newWorldData.get(i);
 			for(int j = 0; j < line.length; j++) {
 				int data = line[j];
-				if(!contains(MAR_NUMS, data) && data != -1 && data != PLAYER_NUM && checkSurroundings(i, j)) {
+				if(!contains(MAR_NUMS, data) && data != -1 && data != PLAYER_NUM && checkSurroundings(i, j))
 					if(random.nextInt(FREQUENCY) == 0)
 						line[j] = data + 5;
-				}
 			}
 		}
 		worldData = new ArrayList<>();
@@ -98,12 +97,10 @@ public class CustomWorld extends World {
 		int maxI = worldData.size() - 1;
 		int maxJ = worldData.getFirst().length - 1;
 
-		for(int k = -1; k <= 1; k++) {
-			for(int l = -1; l <= 1; l++) {
-				if(contains(MAR_NUMS, worldData.get(clamp(i + k, 0, maxI))[clamp(j + l, 0, maxJ)]) && (k != 0 && j != 0))
+		for(int k = -1; k <= 1; k++)
+			for(int l = -1; l <= 1; l++)
+				if(contains(MAR_NUMS, worldData.get(clamp(i + k, 0, maxI))[clamp(j + l, 0, maxJ)]))
 					return true;
-			}
-		}
 
 		return false;
 	}
