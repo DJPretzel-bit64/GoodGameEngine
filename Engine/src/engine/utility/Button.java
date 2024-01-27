@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static engine.Engine.jarPath;
 import static engine.Engine.scale;
 
 public class Button {
@@ -17,8 +18,8 @@ public class Button {
 
 	public Button(String texture, String hoveredTexture, Vec2 pos, Vec2 size) {
 		try {
-			this.texture = ImageIO.read(new File(texture));
-			this.hoveredTexture = ImageIO.read(new File(hoveredTexture));
+			this.texture = ImageIO.read(new File(jarPath + texture));
+			this.hoveredTexture = ImageIO.read(new File(jarPath + hoveredTexture));
 		}catch(IOException e) {
 			System.out.println("Could not find button textures");
 		}

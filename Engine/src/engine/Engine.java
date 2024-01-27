@@ -22,10 +22,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.ConcurrentModificationException;
-import java.util.Properties;
+import java.util.*;
 
 public class Engine extends Canvas {
 
@@ -50,6 +47,7 @@ public class Engine extends Canvas {
 	public	static			boolean				debug;
 	public	static			boolean				overview;
 	public	static			String				layout;
+	public	static			String				jarPath = "";
 
 	private					boolean				running;
 	private					boolean				updateFinished;
@@ -64,7 +62,8 @@ public class Engine extends Canvas {
 
 	public Engine(boolean separateWindow) {
 
-		// I don't know what this does, but it stops the flickering
+		if(isRunningFromJAR())
+			jarPath = new File(Engine.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParent().replace("%20", " ") + "/";
 		Toolkit.getDefaultToolkit().setDynamicLayout(false);
 		String os = System.getProperty("os.name").toLowerCase();
 		if(os.contains("nix") || os.contains("nux"))
@@ -101,7 +100,7 @@ public class Engine extends Canvas {
 	private void loadProperties() {
 		try {
 			Properties properties = new Properties();
-			properties.load(new FileReader("engine/config.properties"));
+			properties.load(new FileReader(jarPath + "engine/config.properties"));
 
 			width = initialWidth = Integer.parseInt(properties.getProperty("width", "800"));
 			height = initialHeight = Integer.parseInt(properties.getProperty("height", "600"));
@@ -125,7 +124,7 @@ public class Engine extends Canvas {
 	}
 
 	private void loadEntities() {
-		Path folderPath = Paths.get(entitiesLocation);
+		Path folderPath = Paths.get(jarPath + entitiesLocation);
 		try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(folderPath)) {
 			for(Path file : directoryStream) {
 				if(Files.isRegularFile(file)) {
@@ -138,7 +137,7 @@ public class Engine extends Canvas {
 					double posY = Double.parseDouble(properties.getProperty("pos_y", "0"));
 					double sizeX = Double.parseDouble(properties.getProperty("size_x", "16"));
 					double sizeY = Double.parseDouble(properties.getProperty("size_y", "16"));
-					String textureLocation = properties.getProperty("texture", "engine/res/missing.png");
+					String textureLocation = jarPath + properties.getProperty("texture", "engine/res/missing.png");
 					String code = properties.getProperty("code");
 					String collidesWithString = properties.getProperty("collides_with", "");
 					int layer = Integer.parseInt(properties.getProperty("layer", "-1"));
@@ -153,7 +152,7 @@ public class Engine extends Canvas {
 						 texture = ImageIO.read(new File(textureLocation));
 					} catch(IOException e) {
 						System.out.println("Could not find " + textureLocation + " texture: " + e);
-						texture = ImageIO.read(new File("engine/res/missing.png"));
+						texture = ImageIO.read(new File(jarPath + "/engine/res/missing.png"));
 					}
 
 					switch(type) {
@@ -195,7 +194,7 @@ public class Engine extends Canvas {
 							}
 						}
 						case "World" -> {
-							String worldCSVFile = properties.getProperty("world_csv_file");
+							String worldCSVFile = jarPath + properties.getProperty("world_csv_file");
 							int tileSize = Integer.parseInt(properties.getProperty("tile_size", "16"));
 							File worldCSV = new File(worldCSVFile);
 							if(code == null)
@@ -239,6 +238,9 @@ public class Engine extends Canvas {
 				if(entity.shouldInitiate())
 					entity.init();
 		} catch(Exception e) {
+			JFrame frame = new JFrame("Failed");
+			frame.setVisible(true);
+			frame.add(new JLabel(e + e.getMessage()));
 			System.out.println("Could not load folder " + entitiesLocation + ". Cause: " + e);
 			e.printStackTrace();
 		}
@@ -399,6 +401,12 @@ public class Engine extends Canvas {
 
 	public static void removeEntities(ArrayList<Entity> entities) {
 		removeList.addAll(entities);
+	}
+
+	private boolean isRunningFromJAR() {
+		String className = Engine.class.getName().replace('.', '/');
+		String classJar = Objects.requireNonNull(Engine.class.getResource("/" + className + ".class")).toString();
+		return classJar.startsWith("jar:");
 	}
 
 	public static void main(String[] args) {

@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static engine.Engine.jarPath;
+
 public class Orb extends BasicEntity {
 
 	CustomWorld customWorld;
@@ -16,7 +18,7 @@ public class Orb extends BasicEntity {
 	public Orb(Vec2 velocity, Vec2 pos, CustomWorld customWorld) {
         super(pos, new Vec2(4, 4), null, new ArrayList<>(), 1, true, false);
 		try {
-			this.texture = ImageIO.read(new File("SpreadingShadows/res/orb.png"));
+			this.texture = ImageIO.read(new File(jarPath + "SpreadingShadows/res/orb.png"));
 		}catch(IOException ignored) {}
 		this.velocity = new Vec2(velocity);
 		this.layer = 2;
