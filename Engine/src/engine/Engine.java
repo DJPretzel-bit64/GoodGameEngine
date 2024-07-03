@@ -46,7 +46,6 @@ public class Engine extends Canvas {
 	private					String				physicsEngineName;
 	public	static			boolean				debug;
 	public	static			boolean				overview;
-	public	static			String				layout;
 	public	static			String				jarPath = "";
 
 	private					boolean				running;
@@ -105,7 +104,7 @@ public class Engine extends Canvas {
 			width = initialWidth = Integer.parseInt(properties.getProperty("width", "800"));
 			height = initialHeight = Integer.parseInt(properties.getProperty("height", "600"));
 			title = properties.getProperty("title", "Engine");
-			String bgColorS = properties.getProperty("bg_color", "34, 37, 41");
+			String bgColorS = properties.getProperty("bg_color", "34,37,41");
 			tps = Integer.parseInt(properties.getProperty("tps", "60"));
 			scale = initialScale = Integer.parseInt(properties.getProperty("scale", "4"));
 			dynamicScale = Boolean.parseBoolean(properties.getProperty("dynamic_scale", "true"));
@@ -114,7 +113,6 @@ public class Engine extends Canvas {
 			physicsEngineName = properties.getProperty("physics_engine", "default");
 			debug = Boolean.parseBoolean(properties.getProperty("debug", "false"));
 			overview = Boolean.parseBoolean(properties.getProperty("overview", "false"));
-			layout = properties.getProperty("layout", "qwerty");
 
 			String[] colors = bgColorS.split(",");
 			bgColor = new Color(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]));

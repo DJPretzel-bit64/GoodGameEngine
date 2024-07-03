@@ -1,7 +1,5 @@
 package engine.utility;
 
-import engine.Engine;
-
 import java.awt.event.*;
 
 public class Input implements KeyListener, MouseListener, MouseMotionListener {
@@ -12,46 +10,24 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(Engine.layout.equals("colemak")) {
-			switch(e.getKeyCode()) {
-				case KeyEvent.VK_W, KeyEvent.VK_UP, KeyEvent.VK_SPACE -> up = true;
-				case KeyEvent.VK_R, KeyEvent.VK_DOWN -> down = true;
-				case KeyEvent.VK_A, KeyEvent.VK_LEFT -> left = true;
-				case KeyEvent.VK_S, KeyEvent.VK_RIGHT -> right = true;
-				case KeyEvent.VK_ESCAPE, KeyEvent.VK_E -> escape = true;
-			}
-		}
-		else {
-			switch(e.getKeyCode()) {
-				case KeyEvent.VK_W, KeyEvent.VK_UP, KeyEvent.VK_SPACE -> up = true;
-				case KeyEvent.VK_S, KeyEvent.VK_DOWN -> down = true;
-				case KeyEvent.VK_A, KeyEvent.VK_LEFT -> left = true;
-				case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> right = true;
-				case KeyEvent.VK_ESCAPE, KeyEvent.VK_E -> escape = true;
-			}
+		switch(e.getKeyCode()) {
+			case KeyEvent.VK_W, KeyEvent.VK_UP, KeyEvent.VK_SPACE -> up = true;
+			case KeyEvent.VK_S, KeyEvent.VK_DOWN -> down = true;
+			case KeyEvent.VK_A, KeyEvent.VK_LEFT -> left = true;
+			case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> right = true;
+			case KeyEvent.VK_ESCAPE, KeyEvent.VK_E -> escape = true;
 		}
 		chars[e.getKeyCode()] = true;
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if(Engine.layout.equals("colemak")) {
-			switch(e.getKeyCode()) {
-				case KeyEvent.VK_W, KeyEvent.VK_UP, KeyEvent.VK_SPACE -> up = false;
-				case KeyEvent.VK_R, KeyEvent.VK_DOWN -> down = false;
-				case KeyEvent.VK_A, KeyEvent.VK_LEFT -> left = false;
-				case KeyEvent.VK_S, KeyEvent.VK_RIGHT -> right = false;
-				case KeyEvent.VK_ESCAPE, KeyEvent.VK_E -> escape = false;
-			}
-		}
-		else {
-			switch(e.getKeyCode()) {
-				case KeyEvent.VK_W, KeyEvent.VK_UP, KeyEvent.VK_SPACE -> up = false;
-				case KeyEvent.VK_S, KeyEvent.VK_DOWN -> down = false;
-				case KeyEvent.VK_A, KeyEvent.VK_LEFT -> left = false;
-				case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> right = false;
-				case KeyEvent.VK_ESCAPE, KeyEvent.VK_E -> escape = false;
-			}
+		switch(e.getKeyCode()) {
+			case KeyEvent.VK_W, KeyEvent.VK_UP, KeyEvent.VK_SPACE -> up = false;
+			case KeyEvent.VK_S, KeyEvent.VK_DOWN -> down = false;
+			case KeyEvent.VK_A, KeyEvent.VK_LEFT -> left = false;
+			case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> right = false;
+			case KeyEvent.VK_ESCAPE, KeyEvent.VK_E -> escape = false;
 		}
 		chars[e.getKeyCode()] = false;
 	}
